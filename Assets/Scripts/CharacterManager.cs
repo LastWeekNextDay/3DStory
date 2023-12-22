@@ -8,12 +8,8 @@ public class CharacterManager : MonoBehaviour
     public CharacterInfo CharacterInfo;
     
     [SerializeField] private PrefabContainer prefabContainer;
-    [SerializeField] public Controller controller;
     [SerializeField] private GameObject holdingSpace;
-    [SerializeField] private Rigidbody rigidBody;
-    public Rigidbody RigidBody => rigidBody;
     [SerializeField] private GameObject weaponObject;
-
     private GameObject WeaponObject
     {
         get => weaponObject;
@@ -27,6 +23,7 @@ public class CharacterManager : MonoBehaviour
             }
 
             if (!value.TryGetComponent(out Weapon weapon)) return;
+            weapon.Side = CharacterInfo.Side;
             CharacterInfo.EquippedWeapon = weapon;
             weaponObject = value;
             weaponObject.transform.SetParent(holdingSpace.transform);
@@ -35,6 +32,8 @@ public class CharacterManager : MonoBehaviour
             weaponObject.transform.localScale = Vector3.one;
         }
     }
+    [SerializeField] private Rigidbody rigidBody;
+    public Rigidbody RigidBody => rigidBody;
     public AnimationController AnimationController { get; private set; }
 
     protected void Awake()
@@ -61,9 +60,10 @@ public class CharacterManager : MonoBehaviour
         CharacterInfo.CurrentSpeed = CharacterInfo.DefaultSpeed;
     }
 
-    private void Update()
+    protected void Update()
     {
         CharacterInfo.LowerAttackCooldown(Time.deltaTime);
         CharacterInfo.LowerDashCooldown(Time.deltaTime);
+        CharacterInfo.HealthUpdate();
     }
 }

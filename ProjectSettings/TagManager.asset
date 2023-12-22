@@ -9,6 +9,7 @@ TagManager:
   - Floor
   - Weapon
   - Enemy
+  - MovableSceneMisc
   layers:
   - Default
   - TransparentFX

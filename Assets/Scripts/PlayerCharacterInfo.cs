@@ -1,10 +1,39 @@
+using System;
+using UnityEngine;
+
 public class PlayerCharacterInfo : CharacterInfo
 {
-    public int TimesHit = 0;
+    public int TimesHit;
+    
+    private float _timeForTimesHitReset = 3f;
+
+    public Action OnTimeHitReset;
     
     public PlayerCharacterInfo(float defaultSpeed = 5, float dashSpeed = 50, float dashDuration = 0.15f,
         float dashCooldown = 1.5f) 
-        : base(defaultSpeed, dashSpeed, dashDuration, dashCooldown)
+        : base(0, defaultSpeed, dashSpeed, dashDuration, dashCooldown)
     {
+    }
+
+    public override void HealthUpdate()
+    {
+        if (TimesHit <= 0) return;
+        _timeForTimesHitReset -= Time.deltaTime;
+        if (_timeForTimesHitReset <= 0)
+        {
+            OnTimeHitReset?.Invoke();
+            TimesHit = 0;
+            _timeForTimesHitReset = 3f;
+        }
+    }
+    
+    public override void TakeDamage(float amount)
+    {
+        base.TakeDamage(amount);
+        TimesHit++;
+        if (TimesHit >= 3)
+        {
+            Die();
+        }
     }
 }

@@ -9,8 +9,7 @@ public class AnimationController
     private readonly int _isRunningAnim = Animator.StringToHash("IsRunning");
     private readonly int _attackSpeed = Animator.StringToHash("AttackSpeed");
     private readonly int _swordAttackAnim1 = Animator.StringToHash("SwordAttackAnimation1");
-    private readonly int _x = Animator.StringToHash("X");
-    private readonly int _y = Animator.StringToHash("Y");
+    private readonly int _swordAttackAnim2 = Animator.StringToHash("SwordAttackAnimation2");
 
     public AnimationController(Animator animator)
     {
@@ -48,18 +47,15 @@ public class AnimationController
         _animator.SetFloat(_attackSpeed, speed);
     }
 
-    public void SetRotationDirection(Vector2 vector2)
-    {
-        _animator.SetFloat(_x, vector2.x);
-        _animator.SetFloat(_y, vector2.y);
-    }
-
     public void DoAttackAnimation(string animation)
     {
         switch (animation)
         {
             case "SwordAttackAnimation1":
                 _animator.SetTrigger(_swordAttackAnim1);
+                break;
+            case "SwordAttackAnimation2":
+                _animator.SetTrigger(_swordAttackAnim2);
                 break;
             default:
                 Debug.LogError(

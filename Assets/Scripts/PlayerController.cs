@@ -6,8 +6,6 @@ public class PlayerController : Controller
     private Controls _controls;
     
     private Vector3 _movement = Vector3.zero;
-    
-    private Vector2 _attackDirection = Vector2.zero;
 
     private void Awake()
     {
@@ -31,16 +29,12 @@ public class PlayerController : Controller
         _controls.Player.Movement.performed += OnMovementPerformed;
         _controls.Player.Movement.canceled += OnMovementCanceled;
         _controls.Player.Attack.performed += OnAttackPerformed;
-        _controls.Player.MousePosition.performed += OnMousePositionPerformed;
-        _controls.Player.RightAnalogPosition.performed += OnRightStickPerformed;
         _controls.Player.Dash.performed += OnDashPerformed;
     }
     
     private void OnDisable()
     {
         _controls.Player.Dash.performed -= OnDashPerformed;
-        _controls.Player.RightAnalogPosition.performed -= OnRightStickPerformed;
-        _controls.Player.MousePosition.performed -= OnMousePositionPerformed;
         _controls.Player.Attack.performed -= OnAttackPerformed;
         _controls.Player.Movement.canceled -= OnMovementCanceled;
         _controls.Player.Movement.performed -= OnMovementPerformed;
@@ -51,10 +45,12 @@ public class PlayerController : Controller
     {
         if (_movement == Vector3.zero)
         {
+            CharacterManager.CharacterInfo.IsRunning = false;
             CharacterManager.AnimationController.StopRunAnimation();
         }
         else
         {
+            CharacterManager.CharacterInfo.IsRunning = true;
             CharacterManager.AnimationController.DoRunAnimation();
         }
         CharacterManager.RigidBody.MovePosition(gameObject.transform.position +
@@ -86,26 +82,11 @@ public class PlayerController : Controller
     
     private void OnAttackPerformed(InputAction.CallbackContext value)
     {
-        DoAttack(_attackDirection);
+        DoAttack();
     }
     
     private void OnDashPerformed(InputAction.CallbackContext value)
     {
         DoDash(_movement);
-    }
-
-    private void OnMousePositionPerformed(InputAction.CallbackContext value)
-    {
-        var mousePosition = value.ReadValue<Vector2>();
-        if (Camera.main == null) return;
-        var playerScreenPosition = Camera.main.WorldToScreenPoint(gameObject.transform.position);
-        var direction = mousePosition - (Vector2)playerScreenPosition;
-        _attackDirection = direction.normalized;
-    }
-    
-    private void OnRightStickPerformed(InputAction.CallbackContext value)
-    {
-        var analog = value.ReadValue<Vector2>();
-        _attackDirection = analog.normalized;
     }
 }

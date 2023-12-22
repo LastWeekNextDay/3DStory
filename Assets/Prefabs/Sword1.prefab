@@ -108,7 +108,11 @@ MonoBehaviour:
   attackDamage: 25
   attackSpeed: 0.5
   attackCooldown: 0.25
-  attackAnimation: SwordAttackAnimation1
+  attackAnimations:
+  - SwordAttackAnimation1
+  - SwordAttackAnimation2
+  useCombos: 1
+  maxComboNumber: 2
 --- !u!65 &4750465830198131726
 BoxCollider:
   m_ObjectHideFlags: 0
