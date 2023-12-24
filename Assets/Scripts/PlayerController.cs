@@ -45,19 +45,22 @@ public class PlayerController : Controller
     {
         if (_movement == Vector3.zero)
         {
+            CharacterManager.CharacterInfo.CurrentSpeed = 0;
             CharacterManager.CharacterInfo.IsRunning = false;
             CharacterManager.AnimationController.StopRunAnimation();
         }
         else
         {
             CharacterManager.CharacterInfo.IsRunning = true;
+            CharacterManager.CharacterInfo.CurrentSpeed = _movement.magnitude *
+                CharacterManager.CharacterInfo.DefaultSpeed;
             CharacterManager.AnimationController.DoRunAnimation();
         }
         CharacterManager.RigidBody.MovePosition(gameObject.transform.position +
                                                 _movement.ToIsometric() *
-                                                (_movement.magnitude * CharacterManager.CharacterInfo.CurrentSpeed *
+                                                (CharacterManager.CharacterInfo.CurrentSpeed *
                                                  Time.deltaTime));
-        CharacterManager.AnimationController.SetMoveSpeed(_movement.magnitude *
+        CharacterManager.AnimationController.SetMoveSpeed(
             CharacterManager.CharacterInfo.CurrentSpeed / CharacterManager.CharacterInfo.DefaultSpeed);
     }
     

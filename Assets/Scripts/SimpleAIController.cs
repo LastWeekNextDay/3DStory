@@ -37,6 +37,7 @@ public class SimpleAIController : Controller
             if (characterManager.CharacterInfo.IsDead)
             {
                 _target = null;
+                _agent.ResetPath();
             }
         }
     }
@@ -44,9 +45,21 @@ public class SimpleAIController : Controller
     private void AttackTarget()
     {
         if (_target == null) return;
-        if (Vector3.Distance(transform.position, _target.transform.position) >
-            CharacterManager.CharacterInfo.EquippedWeapon.AttackRange) return;
-        DoAttack();
+        if (Vector3.Distance(transform.position, _target.transform.position) <
+            CharacterManager.CharacterInfo.EquippedWeapon.AttackRange)
+        {
+            Debug.Log(gameObject.name + " In Range");
+            StartCoroutine(nameof(AttackDelay));      
+        }
+    }
+    
+    private IEnumerator AttackDelay()
+    {
+        if (IsInvoking(nameof(AttackDelay))) yield break;
+        Debug.Log(gameObject.name + " Delay");
+        yield return new WaitForSeconds(0.5f);
+        Debug.Log(gameObject.name + " Attack");
+        DoAttack();  
     }
 
     private void MoveToTarget()
@@ -59,7 +72,9 @@ public class SimpleAIController : Controller
     {
         if (_target != null) return;
         var results = new Collider[1024];
-        var size = Physics.OverlapSphereNonAlloc(transform.position, 10, results);
+        var myPosition = transform.position;
+        var radius = 10;
+        var size = Physics.OverlapSphereNonAlloc(myPosition, radius, results);
         for (var i = 0; i < size; i++)
         {
             var objCollider = results[i];
@@ -68,6 +83,16 @@ public class SimpleAIController : Controller
                 if (characterManager.CharacterInfo.IsDead) continue;
                 if (characterManager.CharacterInfo.Side == CharacterManager.CharacterInfo.Side) continue;
                 _target = objCollider.gameObject;
+                // Create a ray from the character to target, and see if there is an obstacle between them
+                var ray = new Ray(transform.position, _target.transform.position - myPosition);
+                if (Physics.Raycast(ray, out var hit, radius))
+                {
+                    if (hit.collider.gameObject != _target)
+                    {
+                        _target = null;
+                        continue;
+                    }
+                }
                 return;
             }
         }
@@ -82,17 +107,20 @@ public class SimpleAIController : Controller
 
     private void MoveAnimation()
     {
-        _agent.speed = CharacterManager.CharacterInfo.CurrentSpeed;
         if (_agent.remainingDistance > _agent.stoppingDistance)
         {
             CharacterManager.CharacterInfo.IsRunning = true;
-            CharacterManager.AnimationController.SetMoveSpeed(_agent.speed);
+            CharacterManager.CharacterInfo.CurrentSpeed = CharacterManager.CharacterInfo.DefaultSpeed;
+            CharacterManager.AnimationController.SetMoveSpeed(CharacterManager.CharacterInfo.CurrentSpeed);
             CharacterManager.AnimationController.DoRunAnimation();
         }
         else
         {
             CharacterManager.CharacterInfo.IsRunning = false;
+            CharacterManager.CharacterInfo.CurrentSpeed = 0;
+            CharacterManager.AnimationController.SetMoveSpeed(CharacterManager.CharacterInfo.CurrentSpeed);
             CharacterManager.AnimationController.StopRunAnimation();
         }
+        _agent.speed = CharacterManager.CharacterInfo.CurrentSpeed;
     }
 }

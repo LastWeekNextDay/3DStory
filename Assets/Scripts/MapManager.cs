@@ -13,10 +13,11 @@ public class MapManager : MonoBehaviour
 
     private void Awake()
     {
+        if (navMeshData == null) throw new Exception("MapManager: Initial NavMeshData not assigned!");
         _mapFloors = new List<GameObject>();
-        var map = GameObject.Find("MapObjectsCollection");
-        if (map == null) throw new Exception("MapObjectsCollection not found!");
-        foreach (Transform child in map.transform)
+        var mapObjCollection = GameObject.Find("MapObjectsCollection");
+        if (mapObjCollection == null) throw new Exception("MapObjectsCollection not found!");
+        foreach (Transform child in mapObjCollection.transform)
         {
             if (child.gameObject.CompareTag("Floor"))
             {
@@ -25,7 +26,7 @@ public class MapManager : MonoBehaviour
         }
     }
 
-    void Update()
+    private void Update()
     {
         UpdateMapNavMesh();
     }

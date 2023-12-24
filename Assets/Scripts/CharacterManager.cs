@@ -1,5 +1,6 @@
 using System;
 using Prefabs;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -7,10 +8,10 @@ public class CharacterManager : MonoBehaviour
 {
     public CharacterInfo CharacterInfo;
     
-    [SerializeField] private PrefabContainer prefabContainer;
-    [SerializeField] private GameObject holdingSpace;
+    [SerializeField] private GameManager gameManager;
+    private GameObject _holdingSpace;
     [SerializeField] private GameObject weaponObject;
-    private GameObject WeaponObject
+    public GameObject WeaponObject
     {
         get => weaponObject;
         set
@@ -26,33 +27,53 @@ public class CharacterManager : MonoBehaviour
             weapon.Side = CharacterInfo.Side;
             CharacterInfo.EquippedWeapon = weapon;
             weaponObject = value;
-            weaponObject.transform.SetParent(holdingSpace.transform);
+            weaponObject.transform.SetParent(_holdingSpace.transform);
             weaponObject.transform.localPosition = Vector3.zero;
             weaponObject.transform.localRotation = Quaternion.identity;
             weaponObject.transform.localScale = Vector3.one;
         }
     }
-    [SerializeField] private Rigidbody rigidBody;
-    public Rigidbody RigidBody => rigidBody;
+    [DoNotSerialize] public Rigidbody RigidBody { get; private set; }
     public AnimationController AnimationController { get; private set; }
 
     protected void Awake()
     {
         AnimationController = new AnimationController(GetComponent<Animator>());
+        RigidBody = GetComponent<Rigidbody>();
+        
+        if (gameManager == null)
+        {
+            throw new Exception(gameObject.name + ": GameManager not assigned!");
+        }
+
+        GameObject FindHoldingSpace(Transform transformRoot)
+        {
+            foreach (Transform child in transformRoot)
+            {
+                if (child.gameObject.name == "HoldingSpace")
+                {
+                    return child.gameObject;
+                }
+                var childHoldingSpace = FindHoldingSpace(child);
+                if (childHoldingSpace != null)
+                {
+                    return childHoldingSpace;
+                }
+            }
+
+            return null;
+        }
+        
+        _holdingSpace = FindHoldingSpace(transform);
+        if (_holdingSpace == null)
+        {
+            throw new Exception(gameObject.name + ": HoldingSpace not found! Create a child object called HoldingSpace.");
+        }
+        
         if (WeaponObject == null)
         {
-            if (prefabContainer.TryGetByName("Sword1", out var weapon))
-            {
-                WeaponObject = Instantiate(weapon);
-            }
-            else
-            {
-                throw new Exception(gameObject.name + ": Default Weapon not found!");
-            }
+            gameManager.AssignWeaponToCharacter(this, WeaponName.DefaultSword);
         }
-        WeaponObject.transform.SetParent(holdingSpace.transform);
-        WeaponObject.transform.localPosition = Vector3.zero;
-        WeaponObject.transform.localRotation = Quaternion.identity;
     }
 
     private void Start()

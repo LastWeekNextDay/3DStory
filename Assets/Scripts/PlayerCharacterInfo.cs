@@ -21,16 +21,16 @@ public class PlayerCharacterInfo : CharacterInfo
         _timeForTimesHitReset -= Time.deltaTime;
         if (_timeForTimesHitReset <= 0)
         {
-            OnTimeHitReset?.Invoke();
             TimesHit = 0;
             _timeForTimesHitReset = 3f;
+            OnTimeHitReset?.Invoke();
         }
     }
     
     public override void TakeDamage(float amount)
     {
-        base.TakeDamage(amount);
         TimesHit++;
+        base.TakeDamage(amount);
         if (TimesHit >= 3)
         {
             Die();
