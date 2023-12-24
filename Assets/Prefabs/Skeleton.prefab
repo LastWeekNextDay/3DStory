@@ -447,7 +447,7 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 1
-  m_IsKinematic: 1
+  m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 1
@@ -463,10 +463,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 735bf9730ae305748945afb8c843eba9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabContainer: {fileID: 11400000, guid: 1953b208e2651ef4899942d12401f6ae, type: 2}
-  holdingSpace: {fileID: 1843945668176194951}
+  gameManager: {fileID: 0}
   weaponObject: {fileID: 0}
-  rigidBody: {fileID: 6612218992301786492}
 --- !u!114 &8401219037251407224
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -9,6 +9,8 @@ public class SimpleAIController : Controller
     private NavMeshAgent _agent;
     
     private GameObject _target;
+
+    private bool _bufferingAttack;
     
     private void Awake()
     {
@@ -42,24 +44,30 @@ public class SimpleAIController : Controller
         }
     }
 
+    public override void ExitMethod()
+    {
+        _target = null;
+        _agent.ResetPath();
+        base.ExitMethod();
+    }
+    
     private void AttackTarget()
     {
         if (_target == null) return;
         if (Vector3.Distance(transform.position, _target.transform.position) <
             CharacterManager.CharacterInfo.EquippedWeapon.AttackRange)
         {
-            Debug.Log(gameObject.name + " In Range");
             StartCoroutine(nameof(AttackDelay));      
         }
     }
     
     private IEnumerator AttackDelay()
     {
-        if (IsInvoking(nameof(AttackDelay))) yield break;
-        Debug.Log(gameObject.name + " Delay");
-        yield return new WaitForSeconds(0.5f);
-        Debug.Log(gameObject.name + " Attack");
-        DoAttack();  
+        if (_bufferingAttack) yield break;
+        _bufferingAttack = true;
+        yield return new WaitForSeconds(0.3f);
+        DoAttack();
+        _bufferingAttack = false;
     }
 
     private void MoveToTarget()
@@ -110,17 +118,17 @@ public class SimpleAIController : Controller
         if (_agent.remainingDistance > _agent.stoppingDistance)
         {
             CharacterManager.CharacterInfo.IsRunning = true;
-            CharacterManager.CharacterInfo.CurrentSpeed = CharacterManager.CharacterInfo.DefaultSpeed;
-            CharacterManager.AnimationController.SetMoveSpeed(CharacterManager.CharacterInfo.CurrentSpeed);
+            CharacterManager.CharacterInfo.RealSpeed = CharacterManager.CharacterInfo.LogicalSpeed;
+            CharacterManager.AnimationController.SetMoveSpeed(CharacterManager.CharacterInfo.RealSpeed);
             CharacterManager.AnimationController.DoRunAnimation();
         }
         else
         {
             CharacterManager.CharacterInfo.IsRunning = false;
-            CharacterManager.CharacterInfo.CurrentSpeed = 0;
-            CharacterManager.AnimationController.SetMoveSpeed(CharacterManager.CharacterInfo.CurrentSpeed);
+            CharacterManager.CharacterInfo.RealSpeed = 0;
+            CharacterManager.AnimationController.SetMoveSpeed(CharacterManager.CharacterInfo.RealSpeed);
             CharacterManager.AnimationController.StopRunAnimation();
         }
-        _agent.speed = CharacterManager.CharacterInfo.CurrentSpeed;
+        _agent.speed = CharacterManager.CharacterInfo.RealSpeed;
     }
 }

@@ -7,7 +7,13 @@ public class SkeletonCharacterManager : CharacterManager
     private new void Awake()
     {
         CharacterInfo = new SkeletonCharacterInfo();
+        CharacterInfo.OnDeath += () =>
+        {
+            CharacterInfo.IsDead = true;
+            Controller.ExitMethod();
+            AnimationController.DoDeathAnimation();
+            StartCoroutine(nameof(HideBodyByScaling));
+        };
         base.Awake();
-        CharacterInfo.EquippedWeapon.useCombos = false;
     }
 }

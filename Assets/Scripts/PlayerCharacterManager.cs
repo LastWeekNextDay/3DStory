@@ -7,6 +7,11 @@ public class PlayerCharacterManager : CharacterManager
     {
         CharacterInfo = new PlayerCharacterInfo(dashDuration: 0.1f);
         CharacterInfo.OnTakeDamage += amount => UpdateModelColor();
+        CharacterInfo.OnDeath += () =>
+        {
+            CharacterInfo.IsDead = true;
+            SetRagdoll(true);
+        };
         if (CharacterInfo is PlayerCharacterInfo playerCharacterInfo)
         {
             playerCharacterInfo.OnTimeHitReset += UpdateModelColor;

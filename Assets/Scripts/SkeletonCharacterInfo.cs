@@ -6,8 +6,8 @@ public class SkeletonCharacterInfo : CharacterInfo
 {
     public int CurrentHealth { get; private set; }
     
-    public SkeletonCharacterInfo(int health = 100, float defaultSpeed = 1) 
-        : base(1, defaultSpeed)
+    public SkeletonCharacterInfo(int health = 100, float logicalSpeed = 1) 
+        : base(1, logicalSpeed)
     {
         CurrentHealth = health;
     }

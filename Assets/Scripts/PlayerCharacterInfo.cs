@@ -9,9 +9,9 @@ public class PlayerCharacterInfo : CharacterInfo
 
     public Action OnTimeHitReset;
     
-    public PlayerCharacterInfo(float defaultSpeed = 5, float dashSpeed = 50, float dashDuration = 0.15f,
+    public PlayerCharacterInfo(float logicalSpeed = 5, float dashSpeed = 50, float dashDuration = 0.15f,
         float dashCooldown = 1.5f) 
-        : base(0, defaultSpeed, dashSpeed, dashDuration, dashCooldown)
+        : base(0, logicalSpeed, dashSpeed, dashDuration, dashCooldown, canCombo: true)
     {
     }
 

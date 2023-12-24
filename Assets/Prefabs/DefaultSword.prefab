@@ -50,7 +50,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: dfa9ae1d68dfdac4bb0045f6684b77f8, type: 3}
       propertyPath: m_Name
-      value: Sword1
+      value: DefaultSword
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: dfa9ae1d68dfdac4bb0045f6684b77f8, type: 3}
       propertyPath: m_IsActive
@@ -104,14 +104,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   attackType: 0
-  attackRange: 3
+  attackRange: 1.5
   attackDamage: 25
   attackSpeed: 0.5
   attackCooldown: 0.25
   attackAnimations:
   - SwordAttackAnimation1
   - SwordAttackAnimation2
-  useCombos: 1
   maxComboNumber: 2
 --- !u!65 &4750465830198131726
 BoxCollider:
@@ -132,8 +131,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 0
   serializedVersion: 3
-  m_Size: {x: 0.5354055, y: 3, z: 0.9020511}
-  m_Center: {x: -0.047049224, y: 0.91, z: -0.048974454}
+  m_Size: {x: 0.5, y: 1.5, z: 0.5}
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!54 &2385061689446795868
 Rigidbody:
   m_ObjectHideFlags: 0

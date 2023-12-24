@@ -9,8 +9,8 @@ public class CharacterInfo
     public bool IsRunning;
     public bool IsDead;
 
-    public float DefaultSpeed;
-    public float CurrentSpeed;
+    public float LogicalSpeed;
+    public float RealSpeed;
     
     public float DashSpeed;
     public float DashDuration;
@@ -19,17 +19,20 @@ public class CharacterInfo
     public float CurrentAttackCooldown;
     public float CurrentDashCooldown;
     
+    public bool CanCombo { get; protected set; }
+    
     public Weapon EquippedWeapon;
     
     public Action OnDeath;
     public Action<float> OnTakeDamage;
 
-    protected CharacterInfo(int side, float defaultSpeed, float dashSpeed = 0, float dashDuration = 0, float dashCooldown = 0)
+    protected CharacterInfo(int side, float logicalSpeed, float dashSpeed = 0, float dashDuration = 0, float dashCooldown = 0, bool canCombo = false)
     {
+        CanCombo = canCombo;
         IsDead = false;
         Side = side;
-        DefaultSpeed = defaultSpeed;
-        CurrentSpeed = defaultSpeed;
+        LogicalSpeed = logicalSpeed;
+        RealSpeed = logicalSpeed;
         DashSpeed = dashSpeed;
         DashDuration = dashDuration;
         DashCooldown = dashCooldown;

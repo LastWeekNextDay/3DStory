@@ -9,6 +9,11 @@ public class Controller : MonoBehaviour
     
     protected const float TurnSpeed = 1080f;
 
+    public virtual void ExitMethod()
+    {
+        enabled = false;
+    }
+    
     protected void DoAttack()
     {
         if (CharacterManager.CharacterInfo.IsAttacking) return;
@@ -54,9 +59,9 @@ public class Controller : MonoBehaviour
         CharacterManager.CharacterInfo.EquippedWeapon.AllowDamageCollision();
         CharacterManager.AnimationController.SetAttackSpeed(1/CharacterManager.CharacterInfo.EquippedWeapon.AttackSpeed);
         int animIndex;
-        if (CharacterManager.CharacterInfo.EquippedWeapon.useCombos)
+        if (CharacterManager.CharacterInfo.CanCombo)
         {
-            animIndex = CharacterManager.CharacterInfo.EquippedWeapon.ComboNumber-1;
+            animIndex = CharacterManager.CharacterInfo.EquippedWeapon.CurrentComboNumber-1;
             CharacterManager.CharacterInfo.EquippedWeapon.IterateCombo();
         }
         else
@@ -74,12 +79,12 @@ public class Controller : MonoBehaviour
     private IEnumerator Dashing()
     {
         CharacterManager.CharacterInfo.IsDashing = true;
-        var beforeSpeed = CharacterManager.CharacterInfo.CurrentSpeed;
-        CharacterManager.CharacterInfo.CurrentSpeed = CharacterManager.CharacterInfo.DashSpeed;
+        var beforeSpeed = CharacterManager.CharacterInfo.LogicalSpeed;
+        CharacterManager.CharacterInfo.LogicalSpeed = CharacterManager.CharacterInfo.DashSpeed;
         CharacterManager.CharacterInfo.CurrentDashCooldown = CharacterManager.CharacterInfo.DashCooldown;
         CharacterManager.AnimationController.DoDashAnimation();
         yield return new WaitForSeconds(CharacterManager.CharacterInfo.DashDuration);
-        CharacterManager.CharacterInfo.CurrentSpeed = beforeSpeed;
+        CharacterManager.CharacterInfo.LogicalSpeed = beforeSpeed;
         CharacterManager.AnimationController.StopDashAnimation();
         CharacterManager.CharacterInfo.IsDashing = false;
     }

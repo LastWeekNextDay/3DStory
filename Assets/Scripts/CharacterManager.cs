@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using Prefabs;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -35,6 +36,8 @@ public class CharacterManager : MonoBehaviour
     }
     [DoNotSerialize] public Rigidbody RigidBody { get; private set; }
     public AnimationController AnimationController { get; private set; }
+    
+    public Controller Controller { get; private set; }
 
     protected void Awake()
     {
@@ -64,6 +67,8 @@ public class CharacterManager : MonoBehaviour
             return null;
         }
         
+        Controller = GetComponent<Controller>();
+        
         _holdingSpace = FindHoldingSpace(transform);
         if (_holdingSpace == null)
         {
@@ -78,7 +83,7 @@ public class CharacterManager : MonoBehaviour
 
     private void Start()
     {
-        CharacterInfo.CurrentSpeed = CharacterInfo.DefaultSpeed;
+        CharacterInfo.RealSpeed = CharacterInfo.LogicalSpeed;
     }
 
     protected void Update()
@@ -86,5 +91,27 @@ public class CharacterManager : MonoBehaviour
         CharacterInfo.LowerAttackCooldown(Time.deltaTime);
         CharacterInfo.LowerDashCooldown(Time.deltaTime);
         CharacterInfo.HealthUpdate();
+    }
+    
+    protected void SetRagdoll(bool isRagdoll)
+    {
+        AnimationController.SetAnimatorActive(!isRagdoll);
+        foreach (var rb in GetComponentsInChildren<Rigidbody>())
+        {
+            rb.isKinematic = !isRagdoll;
+        }
+        Controller.enabled = !isRagdoll;
+        WeaponObject = WeaponObject;
+    }
+    
+    protected IEnumerator HideBodyByScaling()
+    {
+        yield return new WaitForSeconds(2f);
+        while (transform.localScale.magnitude > 0.1f)
+        {
+            transform.localScale = Vector3.Lerp(transform.localScale, Vector3.zero, Time.deltaTime * 2f);
+            yield return null;
+        }
+        Destroy(gameObject);
     }
 }

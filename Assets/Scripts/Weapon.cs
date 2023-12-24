@@ -29,13 +29,11 @@ public class Weapon : MonoBehaviour
     
     [SerializeField] private List<string> attackAnimations;
     public List<string> AttackAnimation { get => attackAnimations; protected set => attackAnimations = value; }
-
-    public bool useCombos;
     
-    [SerializeField] private int maxComboNumber;
+    [SerializeField] private int maxComboNumber; // First animations up to this number will be used in combos
     public int MaxComboNumber { get => maxComboNumber; protected set => maxComboNumber = value; }
     
-    public int ComboNumber { get; protected set; }
+    public int CurrentComboNumber { get; protected set; }
     
     private Collider _weaponCollider;
     
@@ -49,7 +47,7 @@ public class Weapon : MonoBehaviour
         _hitColliders = new List<Collider>();
         var localScale = _weaponCollider.transform.localScale;
         _weaponCollider.transform.localScale = new Vector3(localScale.x, attackRange, localScale.z);;
-        ComboNumber = 1;
+        CurrentComboNumber = 1;
     }
     
     public void AllowDamageCollision()
@@ -65,10 +63,10 @@ public class Weapon : MonoBehaviour
     
     public void IterateCombo()
     {
-        ComboNumber++;
-        if (ComboNumber > MaxComboNumber)
+        CurrentComboNumber++;
+        if (CurrentComboNumber > MaxComboNumber)
         {
-            ComboNumber = 1;
+            CurrentComboNumber = 1;
         }
     }
     
