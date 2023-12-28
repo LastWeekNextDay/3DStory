@@ -49,8 +49,8 @@ public abstract class CharacterManager : MonoBehaviour
     public Rigidbody RigidBody => rigidBody;
     public AnimationController AnimationController { get; private set; }
     public Controller controller;
-    [SerializeField] private Collider collider;
-    public Collider Collider => collider;
+    [SerializeField] private Collider col;
+    public Collider Collider => col;
     
     [SerializeField] private bool canRagdoll;
     public bool CanRagdoll
@@ -134,7 +134,7 @@ public abstract class CharacterManager : MonoBehaviour
         CharacterInfo.OnDeath += DeathInfoHandling;
         CharacterInfo.OnTakeDamage +=
             (_, vector3) => GameObject.FindGameObjectsWithTag("GameController")[0].GetComponent<VFXManager>().PlayVFX(
-                hitEffect, collider.bounds.center, Quaternion.LookRotation(vector3), transform);
+                hitEffect, Collider.bounds.center, Quaternion.LookRotation(vector3), transform);
     }
 
     private void Start()

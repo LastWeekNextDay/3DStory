@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
 
 public class Controller : MonoBehaviour
@@ -95,7 +94,6 @@ public class Controller : MonoBehaviour
         characterManager.CharacterInfo.IsAttacking = false;
     }
     
-    [SuppressMessage("ReSharper", "Unity.InefficientPropertyAccess")]
     private IEnumerator Dashing()
     {
         characterManager.CharacterInfo.IsDashing = true;
