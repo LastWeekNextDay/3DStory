@@ -1,11 +1,15 @@
 using System;
 using UnityEngine;
 
+[Serializable]
 public class PlayerCharacterInfo : CharacterInfo
 {
-    public int TimesHit;
+    [NonSerialized] public int TimesHit;
     
     private float _timeForTimesHitReset = 3f;
+
+    public int hitsTillDeath;
+    public int timeTillHitReset;
 
     public Action OnTimeHitReset;
     
@@ -22,7 +26,7 @@ public class PlayerCharacterInfo : CharacterInfo
         if (_timeForTimesHitReset <= 0)
         {
             TimesHit = 0;
-            _timeForTimesHitReset = 3f;
+            _timeForTimesHitReset = timeTillHitReset;
             OnTimeHitReset?.Invoke();
         }
     }
@@ -31,7 +35,7 @@ public class PlayerCharacterInfo : CharacterInfo
     {
         TimesHit++;
         base.TakeDamage(amount);
-        if (TimesHit >= 3)
+        if (TimesHit >= hitsTillDeath)
         {
             Die();
         }

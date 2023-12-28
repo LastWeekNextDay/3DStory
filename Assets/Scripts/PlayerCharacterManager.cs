@@ -3,38 +3,34 @@ using UnityEngine;
 
 public class PlayerCharacterManager : CharacterManager
 {
-    private new void Awake()
+    [Header("Character Info")]
+    public PlayerCharacterInfo playerCharacterInfo;
+    protected override void Awake()
     {
-        CharacterInfo = new PlayerCharacterInfo(dashDuration: 0.1f);
-        CharacterInfo.OnTakeDamage += amount => UpdateModelColor();
-        CharacterInfo.OnDeath += () =>
-        {
-            CharacterInfo.IsDead = true;
-            SetRagdoll(true);
-        };
-        if (CharacterInfo is PlayerCharacterInfo playerCharacterInfo)
-        {
-            playerCharacterInfo.OnTimeHitReset += UpdateModelColor;
-        }
+        playerCharacterInfo.OnTimeHitReset += () => UpdateModelDamageColor(0);
+        playerCharacterInfo.OnDeath += () => UpdateModelDamageColor(0);
+        playerCharacterInfo.OnTakeDamage += (_,_) => UpdateModelDamageColor();
+        CharacterInfo = playerCharacterInfo;
         base.Awake();
     }
 
-    private void UpdateModelColor()
+    private void UpdateModelDamageColor(int damageLevel = -1)
     {
-        if (CharacterInfo is PlayerCharacterInfo playerCharacterInfo)
+        if (damageLevel == -1)
         {
-            var color = playerCharacterInfo.TimesHit switch
-            {
-                0 => Color.white,
-                1 => Color.red * 0.25f,
-                2 => Color.red * 0.5f,
-                3 => Color.red,
-                _ => throw new ArgumentOutOfRangeException()
-            };
-            foreach (var mRenderer in GetComponentsInChildren<Renderer>())
-            {
-                mRenderer.material.color = color;
-            }
+            damageLevel = playerCharacterInfo.TimesHit;
+        }
+        var color = damageLevel switch
+        {
+            0 => Color.white,
+            1 => Color.red * 0.25f,
+            2 => Color.red * 0.5f,
+            3 => Color.red,
+            _ => throw new ArgumentOutOfRangeException(nameof(damageLevel), damageLevel, "Damage level invalid.")
+        };
+        foreach (var mRenderer in GetComponentsInChildren<Renderer>())
+        {
+            mRenderer.material.color = color;
         }
     }
 }

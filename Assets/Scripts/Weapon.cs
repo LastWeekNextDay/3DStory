@@ -1,8 +1,6 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public enum AttackType
 {
@@ -14,37 +12,36 @@ public class Weapon : MonoBehaviour
 {
     [SerializeField] private AttackType attackType;
     public AttackType AttackType { get => attackType; protected set => attackType = value; }
-    
     [SerializeField] private float attackRange;
     public float AttackRange { get => attackRange; protected set => attackRange = value; }
-    
     [SerializeField] private float attackDamage;
     public float AttackDamage { get => attackDamage; protected set => attackDamage = value; }
-    
     [SerializeField] private float attackSpeed;
     public float AttackSpeed { get => attackSpeed; protected set => attackSpeed = value; }
-    
     [SerializeField] private float attackCooldown;
     public float AttackCooldown { get => attackCooldown; protected set => attackCooldown = value; }
-    
     [SerializeField] private List<string> attackAnimations;
     public List<string> AttackAnimation { get => attackAnimations; protected set => attackAnimations = value; }
-    
     [SerializeField] private int maxComboNumber; // First animations up to this number will be used in combos
     public int MaxComboNumber { get => maxComboNumber; protected set => maxComboNumber = value; }
-    
     public int CurrentComboNumber { get; protected set; }
-    
     private Collider _weaponCollider;
-    
     private List<Collider> _hitColliders;
-    
     public int Side { get; set; }
+    public AudioSource AudioSource { get; private set; }
+    [SerializeField] private AudioClip weaponInitialAttackSound;
+    public AudioClip WeaponInitialAttackSound => weaponInitialAttackSound;
+    [SerializeField] private AudioClip weaponHitSound;
+    public AudioClip WeaponHitSound => weaponHitSound;
+    public int weaponPushStrength;
 
+    public Action OnHitHardObstacle;
+    
     private void Awake()
     {
         _weaponCollider = GetComponent<Collider>();
         _hitColliders = new List<Collider>();
+        AudioSource = GetComponent<AudioSource>();
         var localScale = _weaponCollider.transform.localScale;
         _weaponCollider.transform.localScale = new Vector3(localScale.x, attackRange, localScale.z);;
         CurrentComboNumber = 1;
@@ -72,32 +69,42 @@ public class Weapon : MonoBehaviour
     
     private void OnTriggerEnter(Collider other)
     {
-        // Movable object
-        if (other.gameObject.CompareTag($"MovableSceneMisc"))
+        if (_hitColliders.Contains(other)) return;
+        
+        var validHit = false;
+        var hitHardObstacle = false;
+        
+        switch (other)
         {
-            if (_hitColliders.Contains(other)) return;
-            _hitColliders.Add(other);
-            if (other.TryGetComponent(out Rigidbody rigidBody))
-            {
-                var direction = other.transform.position - transform.position;
-                rigidBody.AddForce(direction * rigidBody.mass * 1000);
-            }
-            return;
+            case var _ when other.gameObject.CompareTag($"MovableSceneMisc"): // Movable scene misc
+                _hitColliders.Add(other);
+                validHit = true;
+                break;
+
+            case var _ when other.TryGetComponent(out CharacterManager characterManager):
+                if (characterManager.CharacterInfo.IsDead) break;
+                if (characterManager.CharacterInfo.side == Side) break;
+                _hitColliders.Add(other);
+                characterManager.CharacterInfo.LastHitDirection = transform.position + (transform.position - other.transform.position).normalized;
+                characterManager.CharacterInfo.TakeDamage(AttackDamage);
+                validHit = true;
+                break;
+            
+            default:
+                return;
         }
         
-        // Character
-        if (other.TryGetComponent(out CharacterManager characterManager))
+        if (validHit)
         {
-            if (characterManager.CharacterInfo.IsDead) return;
-            if (characterManager.CharacterInfo.Side == Side) return;
-            if (_hitColliders.Contains(other)) return;
-            _hitColliders.Add(other);
-            characterManager.CharacterInfo.TakeDamage(AttackDamage);
-            if (other.CompareTag("Player")) return;
-            if (other.TryGetComponent(out Rigidbody rigidBody))
+            if (hitHardObstacle)
+            {
+                OnHitHardObstacle.Invoke();
+            }
+            AudioSource.PlayOneShot(weaponHitSound);
+            if (other.TryGetComponent(out Rigidbody rigidBodyCharacter))
             {
                 var direction = other.transform.position - transform.position;
-                rigidBody.AddForce(direction * rigidBody.mass * 200);
+                rigidBodyCharacter.AddForce(direction * weaponPushStrength);
             }
         }
     }

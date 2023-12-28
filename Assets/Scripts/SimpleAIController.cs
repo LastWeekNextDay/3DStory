@@ -1,6 +1,4 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -8,17 +6,20 @@ public class SimpleAIController : Controller
 {
     private NavMeshAgent _agent;
     
-    private GameObject _target;
+    [SerializeField] private GameObject target;
 
     private bool _bufferingAttack;
     
-    private void Awake()
+    private const int SearchRadius = 10;
+    
+    protected override void Awake()
     {
-        CharacterManager = GetComponent<CharacterManager>();    
+        base.Awake();  
         _agent = GetComponent<NavMeshAgent>();
         _agent.updateRotation = false;
         _agent.updateUpAxis = false;
         _agent.angularSpeed = TurnSpeed/12;
+        CharacterManager.CharacterInfo.OnDeath += DisableAI;
     }
 
     private void Update()
@@ -31,30 +32,30 @@ public class SimpleAIController : Controller
         AttackTarget();
     }
 
+    private void DisableAI()
+    {
+        target = null;
+        _agent.ResetPath();
+        enabled = false;
+    }
+
     private void CheckIfCurrentTargetIsDead()
     {
-        if (_target == null) return;
-        if (_target.TryGetComponent(out CharacterManager characterManager))
+        if (target == null) return;
+        if (target.TryGetComponent(out CharacterManager characterManager))
         {
             if (characterManager.CharacterInfo.IsDead)
             {
-                _target = null;
+                target = null;
                 _agent.ResetPath();
             }
         }
     }
-
-    public override void ExitMethod()
-    {
-        _target = null;
-        _agent.ResetPath();
-        base.ExitMethod();
-    }
     
     private void AttackTarget()
     {
-        if (_target == null) return;
-        if (Vector3.Distance(transform.position, _target.transform.position) <
+        if (target == null) return;
+        if (Vector3.Distance(transform.position, target.transform.position) <
             CharacterManager.CharacterInfo.EquippedWeapon.AttackRange)
         {
             StartCoroutine(nameof(AttackDelay));      
@@ -72,32 +73,30 @@ public class SimpleAIController : Controller
 
     private void MoveToTarget()
     {
-        if (_target == null) return;
-        _agent.SetDestination(_target.transform.position);
+        if (target == null) return;
+        _agent.SetDestination(target.transform.position);
     }
 
     private void ScanNearbyAreaForTarget()
     {
-        if (_target != null) return;
+        if (target != null) return;
         var results = new Collider[1024];
         var myPosition = transform.position;
-        var radius = 10;
-        var size = Physics.OverlapSphereNonAlloc(myPosition, radius, results);
+        var size = Physics.OverlapSphereNonAlloc(myPosition, SearchRadius, results);
         for (var i = 0; i < size; i++)
         {
             var objCollider = results[i];
             if (objCollider.TryGetComponent(out CharacterManager characterManager))
             {
                 if (characterManager.CharacterInfo.IsDead) continue;
-                if (characterManager.CharacterInfo.Side == CharacterManager.CharacterInfo.Side) continue;
-                _target = objCollider.gameObject;
-                // Create a ray from the character to target, and see if there is an obstacle between them
-                var ray = new Ray(transform.position, _target.transform.position - myPosition);
-                if (Physics.Raycast(ray, out var hit, radius))
+                if (characterManager.CharacterInfo.side == CharacterManager.CharacterInfo.side) continue;
+                target = objCollider.gameObject;
+                var ray = new Ray(transform.position, target.transform.position - myPosition);
+                if (Physics.Raycast(ray, out var hit, SearchRadius))
                 {
-                    if (hit.collider.gameObject != _target)
+                    if (hit.collider.gameObject != target)
                     {
-                        _target = null;
+                        target = null;
                         continue;
                     }
                 }
@@ -117,16 +116,18 @@ public class SimpleAIController : Controller
     {
         if (_agent.remainingDistance > _agent.stoppingDistance)
         {
-            CharacterManager.CharacterInfo.IsRunning = true;
-            CharacterManager.CharacterInfo.RealSpeed = CharacterManager.CharacterInfo.LogicalSpeed;
+            CharacterManager.CharacterInfo.RealSpeed = CharacterManager.CharacterInfo.logicalSpeed;
             CharacterManager.AnimationController.SetMoveSpeed(CharacterManager.CharacterInfo.RealSpeed);
+            if (CharacterManager.CharacterInfo.IsRunning) return;
+            CharacterManager.CharacterInfo.IsRunning = true;
             CharacterManager.AnimationController.DoRunAnimation();
         }
         else
         {
-            CharacterManager.CharacterInfo.IsRunning = false;
             CharacterManager.CharacterInfo.RealSpeed = 0;
             CharacterManager.AnimationController.SetMoveSpeed(CharacterManager.CharacterInfo.RealSpeed);
+            if (!CharacterManager.CharacterInfo.IsRunning) return;
+            CharacterManager.CharacterInfo.IsRunning = false;
             CharacterManager.AnimationController.StopRunAnimation();
         }
         _agent.speed = CharacterManager.CharacterInfo.RealSpeed;

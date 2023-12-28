@@ -5,21 +5,39 @@ using UnityEngine;
 
 public class Controller : MonoBehaviour
 {
-    protected CharacterManager CharacterManager;
+    [SerializeField] private CharacterManager characterManager;
+    protected CharacterManager CharacterManager => characterManager;
     
     protected const float TurnSpeed = 1080f;
 
-    public virtual void ExitMethod()
+    protected virtual void Awake()
     {
-        enabled = false;
+        characterManager = GetComponent<CharacterManager>();
+    }
+
+    public void StopAttack()
+    {
+        if (characterManager.CharacterInfo.IsAttacking == false) return;
+        characterManager.CharacterInfo.IsAttacking = false;
+        characterManager.CharacterInfo.EquippedWeapon.DisallowDamageCollision();
+        characterManager.AnimationController.StopAttackAnimation();
+        characterManager.CharacterInfo.CurrentAttackCooldown = characterManager.CharacterInfo.EquippedWeapon.AttackCooldown;
+        switch (characterManager.CharacterInfo.EquippedWeapon.AttackType)
+        {
+            case AttackType.Melee:
+                StopCoroutine(nameof(MeleeAttack));
+                break;
+            case AttackType.Ranged:
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
     }
     
     protected void DoAttack()
     {
-        if (CharacterManager.CharacterInfo.IsAttacking) return;
-        if (CharacterManager.CharacterInfo.CurrentAttackCooldown > 0) return;
-        if (CharacterManager.CharacterInfo.EquippedWeapon == null) return;
-        switch (CharacterManager.CharacterInfo.EquippedWeapon.AttackType)
+        if (characterManager.CharacterInfo.IsAttacking) return;
+        if (characterManager.CharacterInfo.CurrentAttackCooldown > 0) return;
+        switch (characterManager.CharacterInfo.EquippedWeapon.AttackType)
         {
             case AttackType.Melee:
                 PerformMeleeAttack();
@@ -35,57 +53,60 @@ public class Controller : MonoBehaviour
     protected void DoDash(Vector3 movement)
     {
         if (movement == Vector3.zero) return;
-        if (CharacterManager.CharacterInfo.CurrentDashCooldown > 0) return;
-        if (CharacterManager.CharacterInfo.IsDashing) return;
+        if (characterManager.CharacterInfo.CurrentDashCooldown > 0) return;
+        if (characterManager.CharacterInfo.IsDashing) return;
         StartCoroutine(nameof(Dashing));
     }
 
     private void PerformMeleeAttack()
     {
-        if (CharacterManager.CharacterInfo.IsAttacking) return;
+        if (characterManager.CharacterInfo.IsAttacking) return;
         StartCoroutine(nameof(MeleeAttack));
     }
     
     private void PerformRangedAttack()
     {
-        if (CharacterManager.CharacterInfo.IsAttacking) return;
+        if (characterManager.CharacterInfo.IsAttacking) return;
         Debug.Log("Ranged Attack");
     }
 
     private IEnumerator MeleeAttack()
     {
-        CharacterManager.CharacterInfo.IsAttacking = true;
-        CharacterManager.CharacterInfo.CurrentAttackCooldown = CharacterManager.CharacterInfo.EquippedWeapon.AttackCooldown;
-        CharacterManager.CharacterInfo.EquippedWeapon.AllowDamageCollision();
-        CharacterManager.AnimationController.SetAttackSpeed(1/CharacterManager.CharacterInfo.EquippedWeapon.AttackSpeed);
+        characterManager.CharacterInfo.IsAttacking = true;
+        characterManager.CharacterInfo.CurrentAttackCooldown = characterManager.CharacterInfo.EquippedWeapon.AttackCooldown;
+        characterManager.CharacterInfo.EquippedWeapon.AllowDamageCollision();
+        characterManager.CharacterInfo.EquippedWeapon.AudioSource.PlayOneShot(
+            characterManager.CharacterInfo.EquippedWeapon.WeaponInitialAttackSound);
+        characterManager.AnimationController.SetAttackSpeed(1/characterManager.CharacterInfo.EquippedWeapon.AttackSpeed);
         int animIndex;
-        if (CharacterManager.CharacterInfo.CanCombo)
+        if (characterManager.CharacterInfo.CanCombo)
         {
-            animIndex = CharacterManager.CharacterInfo.EquippedWeapon.CurrentComboNumber-1;
-            CharacterManager.CharacterInfo.EquippedWeapon.IterateCombo();
+            animIndex = characterManager.CharacterInfo.EquippedWeapon.CurrentComboNumber-1;
+            characterManager.CharacterInfo.EquippedWeapon.IterateCombo();
         }
         else
         {
             animIndex = 0;
         }
-        var anim = CharacterManager.CharacterInfo.EquippedWeapon.AttackAnimation[animIndex];
-        CharacterManager.AnimationController.DoAttackAnimation(anim);
-        yield return new WaitForSeconds(CharacterManager.CharacterInfo.EquippedWeapon.AttackSpeed);
-        CharacterManager.CharacterInfo.EquippedWeapon.DisallowDamageCollision();
-        CharacterManager.CharacterInfo.IsAttacking = false;
+        var anim = characterManager.CharacterInfo.EquippedWeapon.AttackAnimation[animIndex];
+        characterManager.AnimationController.DoAttackAnimation(anim);
+        yield return new WaitForSeconds(characterManager.CharacterInfo.EquippedWeapon.AttackSpeed);
+        characterManager.CharacterInfo.EquippedWeapon.DisallowDamageCollision();
+        characterManager.CharacterInfo.IsAttacking = false;
     }
     
     [SuppressMessage("ReSharper", "Unity.InefficientPropertyAccess")]
     private IEnumerator Dashing()
     {
-        CharacterManager.CharacterInfo.IsDashing = true;
-        var beforeSpeed = CharacterManager.CharacterInfo.LogicalSpeed;
-        CharacterManager.CharacterInfo.LogicalSpeed = CharacterManager.CharacterInfo.DashSpeed;
-        CharacterManager.CharacterInfo.CurrentDashCooldown = CharacterManager.CharacterInfo.DashCooldown;
-        CharacterManager.AnimationController.DoDashAnimation();
-        yield return new WaitForSeconds(CharacterManager.CharacterInfo.DashDuration);
-        CharacterManager.CharacterInfo.LogicalSpeed = beforeSpeed;
-        CharacterManager.AnimationController.StopDashAnimation();
-        CharacterManager.CharacterInfo.IsDashing = false;
+        characterManager.CharacterInfo.IsDashing = true;
+        var beforeSpeed = characterManager.CharacterInfo.logicalSpeed;
+        characterManager.CharacterInfo.logicalSpeed = characterManager.CharacterInfo.dashSpeed;
+        characterManager.CharacterInfo.CurrentDashCooldown = characterManager.CharacterInfo.dashCooldown;
+        characterManager.AnimationController.DoDashAnimation();
+        characterManager.AudioSource.PlayOneShot(characterManager.DashSound);
+        yield return new WaitForSeconds(characterManager.CharacterInfo.dashDuration);
+        characterManager.CharacterInfo.logicalSpeed = beforeSpeed;
+        characterManager.AnimationController.StopDashAnimation();
+        characterManager.CharacterInfo.IsDashing = false;
     }
 }

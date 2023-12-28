@@ -11,6 +11,7 @@ public class AnimationController
     private readonly int _swordAttackAnim1 = Animator.StringToHash("SwordAttackAnimation1");
     private readonly int _swordAttackAnim2 = Animator.StringToHash("SwordAttackAnimation2");
     private readonly int _isDeadAnim = Animator.StringToHash("IsDead");
+    private readonly int _stopAttackAnim = Animator.StringToHash("StopAttack");
 
     public AnimationController(Animator animator)
     {
@@ -24,7 +25,6 @@ public class AnimationController
     
     public void DoDashAnimation()
     {
-        // TODO: Implement dash animation
         _animator.SetBool(_isDashingAnim, true);
     }
     
@@ -77,6 +77,6 @@ public class AnimationController
     
     public void StopAttackAnimation()
     {
-        Debug.Log("Stop Attack");
+        _animator.SetTrigger(_stopAttackAnim);
     }
 }

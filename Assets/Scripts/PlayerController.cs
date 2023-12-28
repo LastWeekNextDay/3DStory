@@ -7,10 +7,10 @@ public class PlayerController : Controller
     
     private Vector3 _movement = Vector3.zero;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         _controls = new Controls();
-        CharacterManager = GetComponent<CharacterManager>();
     }
 
     private void Update()
@@ -52,8 +52,8 @@ public class PlayerController : Controller
         else
         {
             CharacterManager.CharacterInfo.IsRunning = true;
-            CharacterManager.CharacterInfo.RealSpeed = _movement.magnitude *
-                CharacterManager.CharacterInfo.LogicalSpeed;
+            CharacterManager.CharacterInfo.RealSpeed = _movement.normalized.magnitude *
+                CharacterManager.CharacterInfo.logicalSpeed;
             CharacterManager.AnimationController.DoRunAnimation();
         }
         CharacterManager.RigidBody.MovePosition(gameObject.transform.position +
@@ -61,7 +61,7 @@ public class PlayerController : Controller
                                                 (CharacterManager.CharacterInfo.RealSpeed *
                                                  Time.deltaTime));
         CharacterManager.AnimationController.SetMoveSpeed(
-            CharacterManager.CharacterInfo.RealSpeed / CharacterManager.CharacterInfo.LogicalSpeed);
+            CharacterManager.CharacterInfo.RealSpeed / CharacterManager.CharacterInfo.logicalSpeed);
     }
     
     private void LookUpdate()

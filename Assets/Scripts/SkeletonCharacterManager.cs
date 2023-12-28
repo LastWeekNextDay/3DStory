@@ -1,19 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class SkeletonCharacterManager : CharacterManager
 {
-    private new void Awake()
+    [Header("Character Info")]
+    public SkeletonCharacterInfo skeletonCharacterInfo;
+    protected override void Awake()
     {
-        CharacterInfo = new SkeletonCharacterInfo();
-        CharacterInfo.OnDeath += () =>
-        {
-            CharacterInfo.IsDead = true;
-            Controller.ExitMethod();
-            AnimationController.DoDeathAnimation();
-            StartCoroutine(nameof(HideBodyByScaling));
-        };
+        CharacterInfo = skeletonCharacterInfo;
         base.Awake();
     }
 }

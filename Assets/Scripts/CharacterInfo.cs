@@ -1,42 +1,45 @@
 using System;
+using UnityEngine;
 
+[Serializable]
 public class CharacterInfo
 {
-    public int Side;
+    public int side;
     
-    public bool IsAttacking;
-    public bool IsDashing;
-    public bool IsRunning;
-    public bool IsDead;
+    [NonSerialized] public bool IsAttacking;
+    [NonSerialized] public bool IsDashing;
+    [NonSerialized] public bool IsRunning;
+    [NonSerialized] public bool IsDead;
 
-    public float LogicalSpeed;
-    public float RealSpeed;
+    public float logicalSpeed;
+    [NonSerialized] public float RealSpeed;
     
-    public float DashSpeed;
-    public float DashDuration;
-    public float DashCooldown;
+    public float dashSpeed;
+    public float dashDuration;
+    public float dashCooldown;
 
-    public float CurrentAttackCooldown;
-    public float CurrentDashCooldown;
+    [NonSerialized] public float CurrentAttackCooldown;
+    [NonSerialized] public float CurrentDashCooldown;
     
-    public bool CanCombo { get; protected set; }
+    [SerializeField] private bool canCombo;
+    public bool CanCombo { get => canCombo; protected set => canCombo = value; }
     
-    public Weapon EquippedWeapon;
+    [NonSerialized] public Weapon EquippedWeapon;
+    [NonSerialized] public Vector3 LastHitDirection;
     
     public Action OnDeath;
-    public Action<float> OnTakeDamage;
+    public Action<float, Vector3> OnTakeDamage;
 
     protected CharacterInfo(int side, float logicalSpeed, float dashSpeed = 0, float dashDuration = 0, float dashCooldown = 0, bool canCombo = false)
     {
         CanCombo = canCombo;
         IsDead = false;
-        Side = side;
-        LogicalSpeed = logicalSpeed;
+        this.side = side;
+        this.logicalSpeed = logicalSpeed;
         RealSpeed = logicalSpeed;
-        DashSpeed = dashSpeed;
-        DashDuration = dashDuration;
-        DashCooldown = dashCooldown;
-        OnDeath += () => IsDead = true;
+        this.dashSpeed = dashSpeed;
+        this.dashDuration = dashDuration;
+        this.dashCooldown = dashCooldown;
     }
     
     public void LowerAttackCooldown(float amount)
@@ -51,7 +54,7 @@ public class CharacterInfo
 
     public virtual void TakeDamage(float amount)
     {
-        OnTakeDamage?.Invoke(amount);
+        OnTakeDamage?.Invoke(amount, LastHitDirection);
     }
 
     public virtual void HealthUpdate()
