@@ -479,7 +479,7 @@ MonoBehaviour:
   weaponObject: {fileID: 0}
   rigidBody: {fileID: 6612218992301786492}
   controller: {fileID: 8401219037251407224}
-  collider: {fileID: 8446610211404452971}
+  collisionCollider: {fileID: 8446610211404452971}
   canRagdoll: 0
   isRagdolled: 0
   skeletonCharacterInfo:

@@ -49,8 +49,8 @@ public abstract class CharacterManager : MonoBehaviour
     public Rigidbody RigidBody => rigidBody;
     public AnimationController AnimationController { get; private set; }
     public Controller controller;
-    [SerializeField] private Collider col;
-    public Collider Collider => col;
+    [SerializeField] private Collider collisionCollider;
+    public Collider Collider => collisionCollider;
     
     [SerializeField] private bool canRagdoll;
     public bool CanRagdoll
