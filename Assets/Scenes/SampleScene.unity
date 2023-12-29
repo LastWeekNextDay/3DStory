@@ -137,7 +137,8 @@ GameObject:
   - component: {fileID: 33878668}
   - component: {fileID: 33878667}
   - component: {fileID: 33878672}
-  m_Layer: 0
+  - component: {fileID: 33878673}
+  m_Layer: 10
   m_Name: Cube
   m_TagString: MovableSceneMisc
   m_Icon: {fileID: 0}
@@ -276,6 +277,22 @@ MonoBehaviour:
   m_IgnoreFromBuild: 0
   m_ApplyToChildren: 1
   m_AffectedAgents: ffffffff
+--- !u!114 &33878673
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 33878666}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5dbb07e00bf833242a0193519f5845f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _movableMiscInfo:
+    Material: 1
+  rigidBody: {fileID: 33878667}
+  collisionCollider: {fileID: 33878668}
 --- !u!1001 &412394299
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2078,6 +2095,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f426d2536c5f764cbe4327d6886bb98, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _prefabContainer: {fileID: 11400000, guid: 1953b208e2651ef4899942d12401f6ae, type: 2}
 --- !u!1001 &1923033352
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -15,7 +15,7 @@ public class PlayerCharacterInfo : CharacterInfo
     
     public PlayerCharacterInfo(float logicalSpeed = 5, float dashSpeed = 50, float dashDuration = 0.15f,
         float dashCooldown = 1.5f) 
-        : base(0, logicalSpeed, dashSpeed, dashDuration, dashCooldown, canCombo: true)
+        : base(0, logicalSpeed, HittableMaterial.FleshBloodRed, dashSpeed, dashDuration, dashCooldown, canCombo: true)
     {
     }
 

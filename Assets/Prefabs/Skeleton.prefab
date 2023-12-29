@@ -622,7 +622,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 735bf9730ae305748945afb8c843eba9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hitEffect: {fileID: 1297937073129364672, guid: 69418da21aaf4054dab4d022a61e1bd3, type: 3}
   audioSource: {fileID: -6038265045749781943}
   idleSound: {fileID: 8300000, guid: ba9e1fdfd0f601d44983370404de065d, type: 3}
   deathSound: {fileID: 8300000, guid: c81e0bb27b665784087c2d5bb346ca96, type: 3}
@@ -635,6 +634,7 @@ MonoBehaviour:
   canRagdoll: 0
   isRagdolled: 0
   skeletonCharacterInfo:
+    Material: 1
     side: 1
     logicalSpeed: 1
     dashSpeed: 0

@@ -73,11 +73,19 @@ public class Weapon : MonoBehaviour
 
         var validHit = false;
         var hitHardObstacle = false;
-        
+        Vector3 closestPointWeapon;
+        Vector3 closestPointOther;
+
         switch (other)
         {
-            case var _ when other.gameObject.CompareTag($"MovableSceneMisc"):
+            case var _ when other.TryGetComponent(out MovableMiscManager movableMiscManager):
                 _hitColliders.Add(other);
+                closestPointWeapon = _weaponCollider.ClosestPoint(other.transform.position);
+                closestPointOther = other.ClosestPoint(closestPointWeapon);
+                movableMiscManager.MovableMiscInfo.LastHitPosition = closestPointOther;
+                movableMiscManager.MovableMiscInfo.LastHitDirection = closestPointWeapon - (closestPointWeapon - movableMiscManager.MovableMiscInfo.LastHitPosition).normalized;
+                movableMiscManager.MovableMiscInfo.TakeDamage(AttackDamage);
+                hitHardObstacle = true;
                 validHit = true;
                 break;
 
@@ -85,10 +93,10 @@ public class Weapon : MonoBehaviour
                 if (characterManager.CharacterInfo.IsDead) break;
                 if (characterManager.CharacterInfo.side == Side) break;
                 _hitColliders.Add(other);
-                var closestPointWeapon = _weaponCollider.ClosestPoint(other.transform.position);
-                var closestPointOther = other.ClosestPoint(closestPointWeapon);
+                closestPointWeapon = _weaponCollider.ClosestPoint(other.transform.position);
+                closestPointOther = other.ClosestPoint(closestPointWeapon);
                 characterManager.CharacterInfo.LastHitPosition = closestPointOther;
-                characterManager.CharacterInfo.LastHitDirection = closestPointWeapon + (closestPointWeapon - closestPointOther).normalized;
+                characterManager.CharacterInfo.LastHitDirection = closestPointWeapon - (closestPointWeapon - closestPointOther).normalized;
                 characterManager.CharacterInfo.TakeDamage(AttackDamage);
                 validHit = true;
                 break;

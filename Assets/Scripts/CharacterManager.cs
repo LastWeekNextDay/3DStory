@@ -6,7 +6,6 @@ public abstract class CharacterManager : MonoBehaviour
 {
     private CharacterInfo _characterInfo;
     public CharacterInfo CharacterInfo { get => _characterInfo; protected set => _characterInfo = value; }
-    public GameObject hitEffect;
     
     [Header("Audio")]
     [SerializeField] private AudioSource audioSource;
@@ -133,8 +132,8 @@ public abstract class CharacterManager : MonoBehaviour
 
         CharacterInfo.OnDeath += DeathInfoHandling;
         CharacterInfo.OnTakeDamage +=
-            (_, vector3_dir, vector3_pos) => GameObject.FindGameObjectsWithTag("GameController")[0].GetComponent<VFXManager>().PlayVFX(
-                hitEffect, vector3_pos, Quaternion.LookRotation(vector3_dir), transform);
+            (_, vector3_dir, vector3_pos) => GameObject.FindGameObjectsWithTag("GameController")[0].GetComponent<VFXManager>().PlayHitVFX(
+                CharacterInfo.Material, vector3_pos, Quaternion.LookRotation(-vector3_dir), transform);
     }
 
     private void Start()
