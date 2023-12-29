@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4000011382548710}
   - component: {fileID: 6764534352601810493}
   - component: {fileID: 2268482037557758759}
-  m_Layer: 1
+  m_Layer: 9
   m_Name: BloodSpray
   m_TagString: Untagged
   m_Icon: {fileID: 0}
