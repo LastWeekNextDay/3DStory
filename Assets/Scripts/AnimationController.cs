@@ -13,6 +13,8 @@ public class AnimationController
     private readonly int _isDeadAnim = Animator.StringToHash("IsDead");
     private readonly int _stopAttackAnim = Animator.StringToHash("StopAttack");
 
+    private readonly int _hurtAnim = Animator.StringToHash("Hurt");
+
     public AnimationController(Animator animator)
     {
         _animator = animator;
@@ -36,6 +38,11 @@ public class AnimationController
     public void DoDeathAnimation()
     {
         _animator.SetBool(_isDeadAnim, true);
+    }
+
+    public void DoHurtAnimation()
+    {
+        _animator.SetTrigger(_hurtAnim);
     }
     
     public void DoRunAnimation()

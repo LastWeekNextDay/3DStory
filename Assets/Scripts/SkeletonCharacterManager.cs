@@ -8,5 +8,6 @@ public class SkeletonCharacterManager : CharacterManager
     {
         CharacterInfo = skeletonCharacterInfo;
         base.Awake();
+        CharacterInfo.OnTakeDamage += (_,_,_) => AnimationController.DoHurtAnimation();
     }
 }
