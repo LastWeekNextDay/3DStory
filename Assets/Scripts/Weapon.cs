@@ -66,17 +66,17 @@ public class Weapon : MonoBehaviour
             CurrentComboNumber = 1;
         }
     }
-    
+
     private void OnTriggerEnter(Collider other)
     {
         if (_hitColliders.Contains(other)) return;
-        
+
         var validHit = false;
         var hitHardObstacle = false;
         
         switch (other)
         {
-            case var _ when other.gameObject.CompareTag($"MovableSceneMisc"): // Movable scene misc
+            case var _ when other.gameObject.CompareTag($"MovableSceneMisc"):
                 _hitColliders.Add(other);
                 validHit = true;
                 break;
@@ -85,7 +85,10 @@ public class Weapon : MonoBehaviour
                 if (characterManager.CharacterInfo.IsDead) break;
                 if (characterManager.CharacterInfo.side == Side) break;
                 _hitColliders.Add(other);
-                characterManager.CharacterInfo.LastHitDirection = transform.position + (transform.position - other.transform.position).normalized;
+                var closestPointWeapon = _weaponCollider.ClosestPoint(other.transform.position);
+                var closestPointOther = other.ClosestPoint(closestPointWeapon);
+                characterManager.CharacterInfo.LastHitPosition = closestPointOther;
+                characterManager.CharacterInfo.LastHitDirection = closestPointWeapon + (closestPointWeapon - closestPointOther).normalized;
                 characterManager.CharacterInfo.TakeDamage(AttackDamage);
                 validHit = true;
                 break;

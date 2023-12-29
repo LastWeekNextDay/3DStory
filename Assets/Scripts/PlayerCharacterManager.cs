@@ -9,7 +9,7 @@ public class PlayerCharacterManager : CharacterManager
     {
         playerCharacterInfo.OnTimeHitReset += () => UpdateModelDamageColor(0);
         playerCharacterInfo.OnDeath += () => UpdateModelDamageColor(0);
-        playerCharacterInfo.OnTakeDamage += (_,_) => UpdateModelDamageColor();
+        playerCharacterInfo.OnTakeDamage += (_,_,_) => UpdateModelDamageColor();
         CharacterInfo = playerCharacterInfo;
         base.Awake();
     }

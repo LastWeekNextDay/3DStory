@@ -133,8 +133,8 @@ public abstract class CharacterManager : MonoBehaviour
 
         CharacterInfo.OnDeath += DeathInfoHandling;
         CharacterInfo.OnTakeDamage +=
-            (_, vector3) => GameObject.FindGameObjectsWithTag("GameController")[0].GetComponent<VFXManager>().PlayVFX(
-                hitEffect, Collider.bounds.center, Quaternion.LookRotation(vector3), transform);
+            (_, vector3_dir, vector3_pos) => GameObject.FindGameObjectsWithTag("GameController")[0].GetComponent<VFXManager>().PlayVFX(
+                hitEffect, vector3_pos, Quaternion.LookRotation(vector3_dir), transform);
     }
 
     private void Start()

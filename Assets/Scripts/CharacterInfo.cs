@@ -26,9 +26,10 @@ public class CharacterInfo
     
     [NonSerialized] public Weapon EquippedWeapon;
     [NonSerialized] public Vector3 LastHitDirection;
+    [NonSerialized] public Vector3 LastHitPosition;
     
     public Action OnDeath;
-    public Action<float, Vector3> OnTakeDamage;
+    public Action<float, Vector3, Vector3> OnTakeDamage;
 
     protected CharacterInfo(int side, float logicalSpeed, float dashSpeed = 0, float dashDuration = 0, float dashCooldown = 0, bool canCombo = false)
     {
@@ -54,7 +55,7 @@ public class CharacterInfo
 
     public virtual void TakeDamage(float amount)
     {
-        OnTakeDamage?.Invoke(amount, LastHitDirection);
+        OnTakeDamage?.Invoke(amount, LastHitDirection, LastHitPosition);
     }
 
     public virtual void HealthUpdate()
