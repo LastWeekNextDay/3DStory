@@ -81,25 +81,21 @@ public class SimpleAIController : Controller
     {
         if (target != null) return;
         var results = new Collider[1024];
-        var myPosition = transform.position;
+        var myPosition = transform.position + 1f * Vector3.up;
         var size = Physics.OverlapSphereNonAlloc(myPosition, SearchRadius, results);
         for (var i = 0; i < size; i++)
         {
             var objCollider = results[i];
             if (objCollider.TryGetComponent(out CharacterManager characterManager))
             {
+                var ray = new Ray(myPosition, objCollider.transform.position + 1f * Vector3.up - myPosition);
+                if (Physics.Raycast(ray, out var hit, SearchRadius))
+                {
+                    if (hit.collider.gameObject != objCollider.gameObject) continue;
+                }
                 if (characterManager.CharacterInfo.IsDead) continue;
                 if (characterManager.CharacterInfo.side == CharacterManager.CharacterInfo.side) continue;
                 target = objCollider.gameObject;
-                var ray = new Ray(transform.position, target.transform.position - myPosition);
-                if (Physics.Raycast(ray, out var hit, SearchRadius))
-                {
-                    if (hit.collider.gameObject != target)
-                    {
-                        target = null;
-                        continue;
-                    }
-                }
                 return;
             }
         }
