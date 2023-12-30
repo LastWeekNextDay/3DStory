@@ -87,7 +87,7 @@ public class Controller : MonoBehaviour
         {
             animIndex = 0;
         }
-        var anim = characterManager.CharacterInfo.EquippedWeapon.AttackAnimation[animIndex];
+        var anim = characterManager.CharacterInfo.EquippedWeapon.AttackAnimations[animIndex];
         characterManager.AnimationController.DoAttackAnimation(anim);
         yield return new WaitForSeconds(characterManager.CharacterInfo.EquippedWeapon.AttackSpeed);
         characterManager.CharacterInfo.EquippedWeapon.DisallowDamageCollision();

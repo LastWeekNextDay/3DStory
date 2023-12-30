@@ -1,5 +1,11 @@
 using UnityEngine;
 
+public enum AnimationState
+{
+    SwordAttackAnimation1,
+    SwordAttackAnimation2
+}
+
 public class AnimationController
 {
     private readonly Animator _animator;
@@ -8,11 +14,8 @@ public class AnimationController
     private readonly int _isDashingAnim = Animator.StringToHash("IsDashing");
     private readonly int _isRunningAnim = Animator.StringToHash("IsRunning");
     private readonly int _attackSpeed = Animator.StringToHash("AttackSpeed");
-    private readonly int _swordAttackAnim1 = Animator.StringToHash("SwordAttackAnimation1");
-    private readonly int _swordAttackAnim2 = Animator.StringToHash("SwordAttackAnimation2");
     private readonly int _isDeadAnim = Animator.StringToHash("IsDead");
     private readonly int _stopAttackAnim = Animator.StringToHash("StopAttack");
-
     private readonly int _hurtAnim = Animator.StringToHash("Hurt");
 
     public AnimationController(Animator animator)
@@ -65,21 +68,9 @@ public class AnimationController
         _animator.SetFloat(_attackSpeed, speed);
     }
 
-    public void DoAttackAnimation(string animation)
+    public void DoAttackAnimation(AnimationState animation)
     {
-        switch (animation)
-        {
-            case "SwordAttackAnimation1":
-                _animator.SetTrigger(_swordAttackAnim1);
-                break;
-            case "SwordAttackAnimation2":
-                _animator.SetTrigger(_swordAttackAnim2);
-                break;
-            default:
-                Debug.LogError(
-                    _animator.gameObject.name + ": Animation not found. Tried to play \"" + animation + "\".");
-                break;
-        }
+        _animator.Play(animation.ToString());
     }
     
     public void StopAttackAnimation()

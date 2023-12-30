@@ -136,9 +136,7 @@ MonoBehaviour:
   attackDamage: 25
   attackSpeed: 0.5
   attackCooldown: 0.5
-  attackAnimations:
-  - SwordAttackAnimation1
-  - SwordAttackAnimation2
+  attackAnimations: 0000000001000000
   maxComboNumber: 2
   weaponInitialAttackSound: {fileID: 8300000, guid: d1439d66b4908894daaeb5e8369d805a, type: 3}
   weaponHitSound: {fileID: 8300000, guid: 8b262d7f4dbe5b84f95d5b1836c65816, type: 3}

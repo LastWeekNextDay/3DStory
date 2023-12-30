@@ -20,8 +20,8 @@ public class Weapon : MonoBehaviour
     public float AttackSpeed { get => attackSpeed; protected set => attackSpeed = value; }
     [SerializeField] private float attackCooldown;
     public float AttackCooldown { get => attackCooldown; protected set => attackCooldown = value; }
-    [SerializeField] private List<string> attackAnimations;
-    public List<string> AttackAnimation { get => attackAnimations; protected set => attackAnimations = value; }
+    [SerializeField] private List<AnimationState> attackAnimations;
+    public List<AnimationState> AttackAnimations { get => attackAnimations; protected set => attackAnimations = value; }
     [SerializeField] private int maxComboNumber; // First animations up to this number will be used in combos
     public int MaxComboNumber { get => maxComboNumber; protected set => maxComboNumber = value; }
     public int CurrentComboNumber { get; protected set; }
