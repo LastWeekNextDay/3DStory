@@ -142,7 +142,7 @@ MonoBehaviour:
   maxComboNumber: 2
   weaponInitialAttackSound: {fileID: 8300000, guid: d1439d66b4908894daaeb5e8369d805a, type: 3}
   weaponHitSound: {fileID: 8300000, guid: 8b262d7f4dbe5b84f95d5b1836c65816, type: 3}
-  weaponPushStrength: 0
+  weaponPushStrength: 50
 --- !u!65 &2663174880183810274
 BoxCollider:
   m_ObjectHideFlags: 0
