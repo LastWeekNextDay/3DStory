@@ -20,6 +20,10 @@ public class AnimationController
 
     public AnimationController(Animator animator)
     {
+        if (animator == null)
+        {
+            Debug.LogError("Animator is null");
+        }
         _animator = animator;
     }
     
