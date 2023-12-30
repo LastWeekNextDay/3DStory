@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 451ed75af2459554292cc6d7e385fa85, type: 3}
+  m_Name: SkeletonSounds
+  m_EditorClassIdentifier: 
+  IdleSound: {fileID: 8300000, guid: ba9e1fdfd0f601d44983370404de065d, type: 3}
+  HurtSound: {fileID: 8300000, guid: 28e96b541f2914d46b2e786c7b78f69e, type: 3}
+  DeathSound: {fileID: 8300000, guid: c81e0bb27b665784087c2d5bb346ca96, type: 3}
+  DashSound: {fileID: 0}

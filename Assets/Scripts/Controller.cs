@@ -101,7 +101,7 @@ public class Controller : MonoBehaviour
         characterManager.CharacterInfo.logicalSpeed = characterManager.CharacterInfo.dashSpeed;
         characterManager.CharacterInfo.CurrentDashCooldown = characterManager.CharacterInfo.dashCooldown;
         characterManager.AnimationController.DoDashAnimation();
-        characterManager.AudioSource.PlayOneShot(characterManager.DashSound);
+        characterManager.AudioSource.PlayOneShot(characterManager.CharacterSounds.DashSound);
         yield return new WaitForSeconds(characterManager.CharacterInfo.dashDuration);
         characterManager.CharacterInfo.logicalSpeed = beforeSpeed;
         characterManager.AnimationController.StopDashAnimation();

@@ -9,13 +9,10 @@ public abstract class CharacterManager : MonoBehaviour
     
     [Header("Audio")]
     [SerializeField] private AudioSource audioSource;
+
     public AudioSource AudioSource => audioSource;
-    [SerializeField] private AudioClip idleSound;
-    public AudioClip IdleSound => idleSound;
-    [SerializeField] private AudioClip deathSound;
-    public AudioClip DeathSound => deathSound;
-    [SerializeField] private AudioClip dashSound;
-    public AudioClip DashSound => dashSound;
+    [SerializeField] private CharacterSounds characterSounds;
+    public CharacterSounds CharacterSounds => characterSounds;
     
     [Header("Weapon")]
     [SerializeField] private GameObject holdingSpace;
@@ -43,6 +40,7 @@ public abstract class CharacterManager : MonoBehaviour
             weaponObject.transform.localScale = Vector3.one;
         }
     }
+    
     [Header("Character Essentials")]
     [SerializeField] private Rigidbody rigidBody;
     public Rigidbody RigidBody => rigidBody;
@@ -134,12 +132,15 @@ public abstract class CharacterManager : MonoBehaviour
         CharacterInfo.OnTakeDamage +=
             (_, vector3_dir, vector3_pos) => GameObject.FindGameObjectsWithTag("GameController")[0].GetComponent<VFXManager>().PlayHitVFX(
                 CharacterInfo.Material, vector3_pos, Quaternion.LookRotation(-vector3_dir), transform);
+        if (characterSounds.HurtSound != null){
+            CharacterInfo.OnTakeDamage += (_,_,_) => AudioSource.PlayOneShot(characterSounds.HurtSound);
+        }
     }
 
     private void Start()
     {
         CharacterInfo.RealSpeed = CharacterInfo.logicalSpeed;
-        AudioSource.clip = idleSound;
+        AudioSource.clip = characterSounds.IdleSound;
         if (AudioSource.clip != null)
         {
             AudioSource.loop = true;
@@ -157,7 +158,11 @@ public abstract class CharacterManager : MonoBehaviour
     private void DeathInfoHandling()
     {
         CharacterInfo.IsDead = true;
-        AudioSource.PlayOneShot(deathSound);
+        if (characterSounds.DeathSound != null)
+        {
+            AudioSource.PlayOneShot(characterSounds.DeathSound);
+        }
+        
     }
 
     private void HandleAnimDeath()

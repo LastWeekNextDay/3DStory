@@ -262,9 +262,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audioSource: {fileID: -5981617015432310595}
-  idleSound: {fileID: 0}
-  deathSound: {fileID: 8300000, guid: 08a647363859d53458663ea19713ab5e, type: 3}
-  dashSound: {fileID: 8300000, guid: 9f775ef0df7d3bc4bb82fea18729517e, type: 3}
+  characterSounds: {fileID: 11400000, guid: 7d25812b67570174c969b09607b400f2, type: 2}
   holdingSpace: {fileID: 9036161017858629003}
   weaponObject: {fileID: 0}
   rigidBody: {fileID: 4234378221451394598}

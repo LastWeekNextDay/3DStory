@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 451ed75af2459554292cc6d7e385fa85, type: 3}
+  m_Name: PlayerSounds
+  m_EditorClassIdentifier: 
+  IdleSound: {fileID: 0}
+  HurtSound: {fileID: 0}
+  DeathSound: {fileID: 8300000, guid: 08a647363859d53458663ea19713ab5e, type: 3}
+  DashSound: {fileID: 8300000, guid: 9f775ef0df7d3bc4bb82fea18729517e, type: 3}
