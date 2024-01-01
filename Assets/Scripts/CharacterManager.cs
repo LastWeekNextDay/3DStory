@@ -128,6 +128,7 @@ public abstract class CharacterManager : MonoBehaviour
         CanRagdoll = canRagdoll;
         IsRagdolled = isRagdolled;
 
+        CharacterInfo.OnDeath += controller.StopAttack;
         CharacterInfo.OnDeath += DeathInfoHandling;
         CharacterInfo.OnTakeDamage +=
             (_, vector3_dir, vector3_pos) => GameObject.FindGameObjectsWithTag("GameController")[0].GetComponent<VFXManager>().PlayHitVFX(
