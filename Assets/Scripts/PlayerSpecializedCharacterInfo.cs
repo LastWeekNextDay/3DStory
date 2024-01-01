@@ -4,9 +4,9 @@ using UnityEngine;
 [Serializable]
 public class PlayerSpecializedCharacterInfo : ISpecializedCharInfo
 {
-    [NonSerialized] public int TimesHit;
+    [NonSerialized] public int TimesHit = 0;
     
-    private float _timeForTimesHitReset = 3f;
+    private float _timeForTimesHitReset;
 
     public int hitsTillDeath;
     public int timeTillHitReset;

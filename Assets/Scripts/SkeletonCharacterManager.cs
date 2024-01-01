@@ -8,8 +8,8 @@ public class SkeletonCharacterManager : CharacterManager
     protected override void Awake()
     {
         base.Awake();
-        CharacterInfo.OnTakeDamage += (_,_,_) => AnimationController.DoHurtAnimation();
         CharacterInfo.OnTakeDamage += (damage,_,_) => SkeletonSpecializedCharacterInfo.TakeDamage(damage);
+        CharacterInfo.OnTakeDamage += (_,_,_) => { if (CharacterInfo.IsDead == false) AnimationController.DoHurtAnimation(); };
         SkeletonSpecializedCharacterInfo.OnDeath += CharacterInfo.Die;
     }
 }
