@@ -134,7 +134,7 @@ MonoBehaviour:
   attackType: 0
   attackRange: 1.5
   attackDamage: 25
-  attackSpeed: 0.5
+  attackTime: 0.5
   attackCooldown: 0.5
   attackAnimations: 0000000001000000
   maxComboNumber: 2

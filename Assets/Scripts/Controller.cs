@@ -9,6 +9,11 @@ public class Controller : MonoBehaviour
     
     protected const float TurnSpeed = 1080f;
 
+    protected virtual void Awake()
+    {
+        
+    }
+
     public void StopAttack()
     {
         if (characterManager.CharacterInfo.IsAttacking == false) return;
