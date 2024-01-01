@@ -107,11 +107,12 @@ public class Weapon : MonoBehaviour
         
         if (validHit)
         {
+            AudioSource.PlayOneShot(weaponHitSound);
             if (hitHardObstacle)
             {
                 OnHitHardObstacle.Invoke();
+                return;
             }
-            AudioSource.PlayOneShot(weaponHitSound);
             if (other.TryGetComponent(out Rigidbody rigidBodyCharacter))
             {
                 var direction = other.transform.position - transform.position;
