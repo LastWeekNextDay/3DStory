@@ -4,7 +4,7 @@ using UnityEngine;
 
 public abstract class CharacterManager : MonoBehaviour
 {
-    private CharacterInfo _characterInfo;
+    [SerializeField] private CharacterInfo _characterInfo;
     public CharacterInfo CharacterInfo { get => _characterInfo; protected set => _characterInfo = value; }
     
     [Header("Audio")]
@@ -152,7 +152,6 @@ public abstract class CharacterManager : MonoBehaviour
     {
         CharacterInfo.LowerAttackCooldown(Time.deltaTime);
         CharacterInfo.LowerDashCooldown(Time.deltaTime);
-        CharacterInfo.HealthUpdate();
     }
 
     private void DeathInfoHandling()
@@ -162,7 +161,6 @@ public abstract class CharacterManager : MonoBehaviour
         {
             AudioSource.PlayOneShot(characterSounds.DeathSound);
         }
-        
     }
 
     private void HandleAnimDeath()

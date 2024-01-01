@@ -3,22 +3,24 @@ using UnityEngine;
 
 public class PlayerCharacterManager : CharacterManager
 {
-    [Header("Character Info")]
-    public PlayerCharacterInfo playerCharacterInfo;
+    [Header("Specialized Character Info")]
+    [SerializeField] private PlayerSpecializedCharacterInfo playerSpecializedCharacterInfo;
+    public PlayerSpecializedCharacterInfo PlayerSpecializedCharacterInfo => playerSpecializedCharacterInfo;
     protected override void Awake()
     {
-        playerCharacterInfo.OnTimeHitReset += () => UpdateModelDamageColor(0);
-        playerCharacterInfo.OnDeath += () => UpdateModelDamageColor(0);
-        playerCharacterInfo.OnTakeDamage += (_,_,_) => UpdateModelDamageColor();
-        CharacterInfo = playerCharacterInfo;
         base.Awake();
+        CharacterInfo.OnTakeDamage += (_,_,_) => UpdateModelDamageColor();
+        CharacterInfo.OnTakeDamage += (damage,_,_) => PlayerSpecializedCharacterInfo.TakeDamage(damage);
+        PlayerSpecializedCharacterInfo.OnTimeHitReset += () => UpdateModelDamageColor(0);
+        PlayerSpecializedCharacterInfo.OnDeath += () => UpdateModelDamageColor(0);
+        PlayerSpecializedCharacterInfo.OnDeath += CharacterInfo.Die;
     }
 
     private void UpdateModelDamageColor(int damageLevel = -1)
     {
         if (damageLevel == -1)
         {
-            damageLevel = playerCharacterInfo.TimesHit;
+            damageLevel = playerSpecializedCharacterInfo.TimesHit;
         }
         var color = damageLevel switch
         {

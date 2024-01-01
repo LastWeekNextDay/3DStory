@@ -261,6 +261,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3eb45846e3da82d4cbbe9d7b407c5117, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _characterInfo:
+    Material: 0
+    side: 0
+    logicalSpeed: 5
+    dashSpeed: 30
+    dashDuration: 0.1
+    dashCooldown: 3
+    canCombo: 1
   audioSource: {fileID: -5981617015432310595}
   characterSounds: {fileID: 11400000, guid: 7d25812b67570174c969b09607b400f2, type: 2}
   holdingSpace: {fileID: 9036161017858629003}
@@ -270,14 +278,7 @@ MonoBehaviour:
   collisionCollider: {fileID: 3164976471033731727}
   canRagdoll: 1
   isRagdolled: 0
-  playerCharacterInfo:
-    Material: 0
-    side: 0
-    logicalSpeed: 5
-    dashSpeed: 25
-    dashDuration: 0.25
-    dashCooldown: 3
-    canCombo: 1
+  playerSpecializedCharacterInfo:
     hitsTillDeath: 3
     timeTillHitReset: 3
 --- !u!82 &-5981617015432310595

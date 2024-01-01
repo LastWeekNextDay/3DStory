@@ -49,11 +49,6 @@ public class CharacterInfo : HittableObject
         CurrentDashCooldown -= amount;
     }
 
-    public virtual void HealthUpdate()
-    {
-        
-    }
-
     public void Die()
     {
         OnDeath?.Invoke();

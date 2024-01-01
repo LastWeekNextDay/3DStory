@@ -622,6 +622,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 735bf9730ae305748945afb8c843eba9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _characterInfo:
+    Material: 1
+    side: 1
+    logicalSpeed: 1
+    dashSpeed: 0
+    dashDuration: 0
+    dashCooldown: 0
+    canCombo: 0
   audioSource: {fileID: -6038265045749781943}
   characterSounds: {fileID: 11400000, guid: e55f273bc70d82c45af7e74efd128aa7, type: 2}
   holdingSpace: {fileID: 1843945668176194951}
@@ -631,14 +639,7 @@ MonoBehaviour:
   collisionCollider: {fileID: 8446610211404452971}
   canRagdoll: 0
   isRagdolled: 0
-  skeletonCharacterInfo:
-    Material: 1
-    side: 1
-    logicalSpeed: 1
-    dashSpeed: 0
-    dashDuration: 0
-    dashCooldown: 0
-    canCombo: 0
+  skeletonSpecializedCharacterInfo:
     currentHealth: 100
 --- !u!114 &8401219037251407224
 MonoBehaviour:

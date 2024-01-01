@@ -2,12 +2,14 @@ using UnityEngine;
 
 public class SkeletonCharacterManager : CharacterManager
 {
-    [Header("Character Info")]
-    public SkeletonCharacterInfo skeletonCharacterInfo;
+    [Header("Specialized Character Info")]
+    [SerializeField] private SkeletonSpecializedCharacterInfo skeletonSpecializedCharacterInfo;
+    public SkeletonSpecializedCharacterInfo SkeletonSpecializedCharacterInfo => skeletonSpecializedCharacterInfo;
     protected override void Awake()
     {
-        CharacterInfo = skeletonCharacterInfo;
         base.Awake();
         CharacterInfo.OnTakeDamage += (_,_,_) => AnimationController.DoHurtAnimation();
+        CharacterInfo.OnTakeDamage += (damage,_,_) => SkeletonSpecializedCharacterInfo.TakeDamage(damage);
+        SkeletonSpecializedCharacterInfo.OnDeath += CharacterInfo.Die;
     }
 }
