@@ -16,8 +16,8 @@ public class Weapon : MonoBehaviour
     public float AttackRange { get => attackRange; protected set => attackRange = value; }
     [SerializeField] private float attackDamage;
     public float AttackDamage { get => attackDamage; protected set => attackDamage = value; }
-    [SerializeField] private float attackSpeed;
-    public float AttackSpeed { get => attackSpeed; protected set => attackSpeed = value; }
+    [SerializeField] private float attackTime;
+    public float AttackTime { get => attackTime; protected set => attackTime = value; }
     [SerializeField] private float attackCooldown;
     public float AttackCooldown { get => attackCooldown; protected set => attackCooldown = value; }
     [SerializeField] private List<AnimationState> attackAnimations;

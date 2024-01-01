@@ -71,7 +71,7 @@ public class Controller : MonoBehaviour
         characterManager.CharacterInfo.EquippedWeapon.AllowDamageCollision();
         characterManager.CharacterInfo.EquippedWeapon.AudioSource.PlayOneShot(
             characterManager.CharacterInfo.EquippedWeapon.WeaponInitialAttackSound);
-        characterManager.AnimationController.SetAttackSpeed(1/characterManager.CharacterInfo.EquippedWeapon.AttackSpeed);
+        characterManager.AnimationController.SetAttackSpeed(1/characterManager.CharacterInfo.EquippedWeapon.AttackTime);
         int animIndex;
         if (characterManager.CharacterInfo.CanCombo)
         {
@@ -84,7 +84,7 @@ public class Controller : MonoBehaviour
         }
         var anim = characterManager.CharacterInfo.EquippedWeapon.AttackAnimations[animIndex];
         characterManager.AnimationController.DoAttackAnimation(anim);
-        yield return new WaitForSeconds(characterManager.CharacterInfo.EquippedWeapon.AttackSpeed);
+        yield return new WaitForSeconds(characterManager.CharacterInfo.EquippedWeapon.AttackTime);
         characterManager.CharacterInfo.EquippedWeapon.DisallowDamageCollision();
         characterManager.CharacterInfo.IsAttacking = false;
     }
