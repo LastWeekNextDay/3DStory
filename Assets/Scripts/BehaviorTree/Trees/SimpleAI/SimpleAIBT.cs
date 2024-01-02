@@ -8,6 +8,7 @@ public class SimpleAIBT : BehaviorTree
     protected override Node SetupTree()
     {
         Node root = new Sequence(new List<Node>{
+            new Alive(_controller.CharacterManager.CharacterInfo),
             new StandSearch(_controller, _searchRadius),
             new RushAttack(_controller, _searchRadius)
         });

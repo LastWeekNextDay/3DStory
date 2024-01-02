@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.AI;
 
 public class RushAttack : Node
 {
@@ -14,11 +13,6 @@ public class RushAttack : Node
 
     public override NodeState Evaluate()
     {
-        if (_controller.CharacterManager.CharacterInfo.IsDead)
-        {
-            State = NodeState.FAILURE;
-            return State;
-        }
         if (_controller.TargetToAttack == null)
         {
             State = NodeState.FAILURE;

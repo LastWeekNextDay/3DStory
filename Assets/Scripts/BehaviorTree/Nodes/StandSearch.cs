@@ -13,11 +13,6 @@ public class StandSearch : Node
 
     public override NodeState Evaluate()
     {
-        if (_controller.CharacterManager.CharacterInfo.IsDead)
-        {
-            State = NodeState.FAILURE;
-            return State;
-        }
         if (_controller.TargetToAttack != null)
         {
             if (_controller.TargetToAttack.TryGetComponent(out CharacterManager characterManager))
