@@ -140,6 +140,7 @@ GameObject:
   - component: {fileID: 4234378221451394598}
   - component: {fileID: -1134574606779264188}
   - component: {fileID: 8875546221816800562}
+  - component: {fileID: 2859652569266607878}
   - component: {fileID: -5981617015432310595}
   m_Layer: 6
   m_Name: Player
@@ -249,6 +250,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterManager: {fileID: 8875546221816800562}
+  TargetToAttack: {fileID: 0}
 --- !u!114 &8875546221816800562
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -281,6 +283,21 @@ MonoBehaviour:
   playerSpecializedCharacterInfo:
     hitsTillDeath: 3
     timeTillHitReset: 3
+--- !u!114 &2859652569266607878
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1067053214699150}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06270cd252028ed43b41ddde169c7361, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 2048
 --- !u!82 &-5981617015432310595
 AudioSource:
   m_ObjectHideFlags: 0
