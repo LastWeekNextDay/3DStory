@@ -48,9 +48,31 @@ public class SimpleAIController : Controller
 
     protected override void LookUpdate()
     {
-        if (_agent.velocity == Vector3.zero) return;
-        var lookRotation = Quaternion.LookRotation(_agent.velocity);
-        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * _agent.angularSpeed);
+        Quaternion lookRotation;
+        Vector3 dir;
+        if (TargetToAttack != null)
+        {
+            var myPositionAdj = transform.position + 1f * Vector3.up;
+            var targetPositionAdj = TargetToAttack.transform.position + 1f * Vector3.up;
+            dir = targetPositionAdj - myPositionAdj;
+            var ray = new Ray(myPositionAdj, dir);
+            if (Physics.Raycast(ray, out var hit, 10000))
+            {
+                if (hit.collider.gameObject != TargetToAttack){
+                    dir = _agent.velocity;
+                }
+            }
+        }
+        else
+        {
+            if (_agent.velocity == Vector3.zero){
+                dir = transform.forward;
+            } else {
+                dir = _agent.velocity;
+            }
+        }
+        lookRotation = Quaternion.LookRotation(dir);
+        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, 360f/TurnSpeed);
     }
 
     protected override void MoveUpdate()
