@@ -58,8 +58,13 @@ public class SimpleAIController : Controller
             var ray = new Ray(myPositionAdj, dir);
             if (Physics.Raycast(ray, out var hit, 10000))
             {
-                if (hit.collider.gameObject != TargetToAttack){
-                    dir = _agent.velocity;
+                if (hit.collider.gameObject != TargetToAttack)
+                {
+                    if (_agent.velocity == Vector3.zero){
+                        dir = transform.forward;
+                    } else {
+                        dir = _agent.velocity;
+                    }
                 }
             }
         }
