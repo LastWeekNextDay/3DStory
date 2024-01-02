@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -11,16 +12,6 @@ public class PlayerController : Controller
     {
         base.Awake();
         _controls = new Controls();
-    }
-
-    private void Update()
-    {
-        LookUpdate();
-    }
-
-    private void FixedUpdate()
-    {
-        MoveUpdate();
     }
 
     private void OnEnable()
@@ -41,7 +32,7 @@ public class PlayerController : Controller
         _controls.Disable();
     }
     
-    private void MoveUpdate()
+    protected override void MoveUpdate()
     {
         if (_movement == Vector3.zero)
         {
@@ -56,15 +47,16 @@ public class PlayerController : Controller
                 CharacterManager.CharacterInfo.logicalSpeed;
             CharacterManager.AnimationController.DoRunAnimation();
         }
-        CharacterManager.RigidBody.MovePosition(gameObject.transform.position +
+        TargetToMoveTo.transform.position = gameObject.transform.position +
                                                 _movement.ToIsometric() *
                                                 (CharacterManager.CharacterInfo.RealSpeed *
-                                                 Time.deltaTime));
+                                                 Time.deltaTime);
+        CharacterManager.RigidBody.MovePosition(TargetToMoveTo.transform.position);
         CharacterManager.AnimationController.SetMoveSpeed(
             CharacterManager.CharacterInfo.RealSpeed / CharacterManager.CharacterInfo.logicalSpeed);
     }
     
-    private void LookUpdate()
+    protected override void LookUpdate()
     {
         if (_movement == Vector3.zero) return;
         
@@ -91,5 +83,15 @@ public class PlayerController : Controller
     private void OnDashPerformed(InputAction.CallbackContext value)
     {
         DoDash(_movement);
+    }
+
+    public override void StopMovement()
+    {
+        _movement = Vector3.zero;
+    }
+
+    public override void DoAttack()
+    {
+        DoGenericAttack();
     }
 }

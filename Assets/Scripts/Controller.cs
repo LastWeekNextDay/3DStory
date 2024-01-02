@@ -1,18 +1,34 @@
 using System;
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
-public class Controller : MonoBehaviour
+public abstract class Controller : MonoBehaviour
 {
     [SerializeField] private CharacterManager characterManager;
-    protected CharacterManager CharacterManager => characterManager;
+    public CharacterManager CharacterManager => characterManager;
+    [NonSerialized] public GameObject TargetToMoveTo;
+    public GameObject TargetToAttack;
     
     protected const float TurnSpeed = 1080f;
 
     protected virtual void Awake()
     {
-        
+        TargetToMoveTo = new GameObject(gameObject.name + " MoveTarget");
+        TargetToMoveTo.transform.position = gameObject.transform.position;
     }
+
+    protected virtual void Update()
+    {
+        LookUpdate();
+    }
+
+    protected virtual void FixedUpdate()
+    {
+        MoveUpdate();
+    }
+
+    public abstract void StopMovement();
 
     public void StopAttack()
     {
@@ -31,8 +47,10 @@ public class Controller : MonoBehaviour
                 throw new ArgumentOutOfRangeException();
         }
     }
+
+    public abstract void DoAttack();
     
-    protected void DoAttack()
+    protected void DoGenericAttack()
     {
         if (characterManager.CharacterInfo.IsAttacking) return;
         if (characterManager.CharacterInfo.CurrentAttackCooldown > 0) return;
@@ -49,7 +67,7 @@ public class Controller : MonoBehaviour
         }
     }
 
-    protected void DoDash(Vector3 movement)
+    public void DoDash(Vector3 movement)
     {
         if (movement == Vector3.zero) return;
         if (characterManager.CharacterInfo.CurrentDashCooldown > 0) return;
@@ -57,13 +75,13 @@ public class Controller : MonoBehaviour
         StartCoroutine(nameof(Dashing));
     }
 
-    private void PerformMeleeAttack()
+    public void PerformMeleeAttack()
     {
         if (characterManager.CharacterInfo.IsAttacking) return;
         StartCoroutine(nameof(MeleeAttack));
     }
     
-    private void PerformRangedAttack()
+    public void PerformRangedAttack()
     {
         if (characterManager.CharacterInfo.IsAttacking) return;
         Debug.Log("Ranged Attack");
@@ -107,4 +125,7 @@ public class Controller : MonoBehaviour
         characterManager.AnimationController.StopDashAnimation();
         characterManager.CharacterInfo.IsDashing = false;
     }
+
+    protected abstract void MoveUpdate();
+    protected abstract void LookUpdate();
 }
