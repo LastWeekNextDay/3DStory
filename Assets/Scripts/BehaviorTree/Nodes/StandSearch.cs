@@ -15,17 +15,8 @@ public class StandSearch : Node
     {
         if (_controller.TargetToAttack != null)
         {
-            if (_controller.TargetToAttack.TryGetComponent(out CharacterManager characterManager))
-            {
-                if (characterManager.CharacterInfo.IsDead)
-                {
-                    _controller.TargetToAttack = null;
-                    State = NodeState.FAILURE;
-                    return State;
-                }
-                State = NodeState.SUCCESS;
-                return State;
-            }
+            State = NodeState.SUCCESS;
+            return State;
         }
         var results = new Collider[1024];
         var myPosition = _controller.transform.position + 1f * Vector3.up;

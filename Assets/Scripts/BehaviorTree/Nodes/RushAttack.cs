@@ -13,6 +13,12 @@ public class RushAttack : Node
 
     public override NodeState Evaluate()
     {
+        if (_controller.TargetToAttack.GetComponent<CharacterManager>().CharacterInfo.IsDead)
+        {
+            _controller.TargetToAttack = null;
+            State = NodeState.SUCCESS;
+            return State;
+        }
         if (_controller.TargetToAttack == null)
         {
             State = NodeState.FAILURE;
