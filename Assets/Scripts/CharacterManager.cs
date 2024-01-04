@@ -123,12 +123,17 @@ public abstract class CharacterManager : MonoBehaviour
         if (WeaponObject == null)
         {
             _onRequestWeapon?.Invoke(this, WeaponName.DefaultSword);
+        } else
+        {
+            WeaponObject = WeaponObject;
         }
         
         CanRagdoll = canRagdoll;
         IsRagdolled = isRagdolled;
 
+        CharacterInfo.OnDeath += controller.StopMovement;
         CharacterInfo.OnDeath += controller.StopAttack;
+        CharacterInfo.OnDeath += () => Destroy(controller.TargetToMoveTo);
         CharacterInfo.OnDeath += DeathInfoHandling;
         CharacterInfo.OnTakeDamage +=
             (_, vector3_dir, vector3_pos) => GameObject.FindGameObjectsWithTag("GameController")[0].GetComponent<VFXManager>().PlayHitVFX(

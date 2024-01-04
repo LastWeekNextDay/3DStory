@@ -42,8 +42,6 @@ public class Weapon : MonoBehaviour
         _weaponCollider = GetComponent<Collider>();
         _hitColliders = new List<Collider>();
         AudioSource = GetComponent<AudioSource>();
-        var localScale = _weaponCollider.transform.localScale;
-        _weaponCollider.transform.localScale = new Vector3(localScale.x, attackRange, localScale.z);;
         CurrentComboNumber = 1;
     }
     

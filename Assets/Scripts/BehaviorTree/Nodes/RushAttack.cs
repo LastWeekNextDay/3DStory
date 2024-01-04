@@ -31,13 +31,12 @@ public class RushAttack : Node
         {
             if (hit.collider.gameObject == _controller.TargetToAttack.gameObject)
             {
-                var movePosAdjustedWithWeaponRange = _controller.TargetToAttack.transform.position - 
-                (_controller.CharacterManager.CharacterInfo.EquippedWeapon.AttackRange * 
-                Vector3.Normalize(_controller.TargetToAttack.transform.position - _controller.transform.position));
-
-                if (Vector3.Distance(_controller.transform.position, movePosAdjustedWithWeaponRange) > _controller.CharacterManager.CharacterInfo.EquippedWeapon.AttackRange)
+                if (Vector3.Distance(_controller.transform.position, _controller.TargetToAttack.transform.position) > _controller.CharacterManager.CharacterInfo.EquippedWeapon.AttackRange)
                 {
-                    _controller.TargetToMoveTo.transform.position = movePosAdjustedWithWeaponRange;
+                    var dir = _controller.TargetToAttack.transform.position - _controller.transform.position;
+                    var dirBuffer = dir * 0.05f;
+                    var movePosAdjByAttackRange = _controller.TargetToAttack.transform.position - dir.normalized * _controller.CharacterManager.CharacterInfo.EquippedWeapon.AttackRange + dirBuffer;
+                    _controller.TargetToMoveTo.transform.position = movePosAdjByAttackRange;
                 }
             }
         }

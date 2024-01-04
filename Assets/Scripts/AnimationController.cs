@@ -3,7 +3,8 @@ using UnityEngine;
 public enum AnimationState
 {
     SwordAttackAnimation1,
-    SwordAttackAnimation2
+    SwordAttackAnimation2,
+    MaceAttackAnimation1
 }
 
 public class AnimationController
